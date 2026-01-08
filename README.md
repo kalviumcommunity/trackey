@@ -117,6 +117,80 @@ package.json
 
 .husky/ folder with pre-commit hook
 
-Screenshots/logs
+
 
 ----
+
+# Environment Variable Management (Next.js)
+
+This project demonstrates secure and professional management of environment variables in a Next.js application. Sensitive configuration values are protected from client-side exposure, ensuring security, portability, and production readiness.
+
+---
+
+
+---
+
+## 📌 Purpose
+
+The purpose of environment variable management is to:
+- Store sensitive data securely (API keys, database URLs, secrets)
+- Prevent accidental exposure of secrets to the browser
+- Enable easy setup across different environments (development, staging, production)
+
+---
+
+## 📁 Environment Files Used
+
+The project uses the following environment files:
+
+### `.env.local`
+- Contains **actual credentials and secrets**
+- Used only for local development
+- **Never committed to GitHub**
+
+### `.env.example`
+- Template file listing all required environment variables
+- Contains placeholder values and documentation
+- Safe to commit and share with teammates
+
+---
+
+## 🖥️ Server-Side Environment Variables
+
+These variables are available **only on the server** and must never be accessed inside client components.
+
+| Variable | Description |
+|--------|------------|
+| `DATABASE_URL` | Database connection string |
+| `JWT_SECRET` | Secret key for authentication and token handling |
+
+> These variables do **not** use the `NEXT_PUBLIC_` prefix, ensuring they remain private.
+
+---
+
+## 🌐 Client-Side Environment Variables
+
+Client-side variables must start with `NEXT_PUBLIC_` to be safely exposed by Next.js.
+
+| Variable | Description |
+|--------|------------|
+| `NEXT_PUBLIC_API_BASE_URL` | Base URL for frontend API requests |
+
+> Only variables prefixed with `NEXT_PUBLIC_` are accessible in the browser.
+
+---
+
+## ⚙️ Setup Instructions
+
+Follow these steps to configure environment variables:
+
+1. Create a local environment file:
+   ```bash
+   cp .env.example .env.local
+Replace placeholder values in .env.local with actual credentials.
+
+Start the development server:
+
+bash
+Copy code
+npm run dev
