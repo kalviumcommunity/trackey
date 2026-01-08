@@ -117,7 +117,6 @@ package.json
 
 .husky/ folder with pre-commit hook
 
-Screenshots/logs
 
 ----
 # TRackey
