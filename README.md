@@ -1,105 +1,64 @@
-Trackey – Project Plan (4-Week Sprint)
+# TRackey
 
-Problem Statement & Solution Overview
-Train delays are common in India, yet passengers rarely receive real-time updates on current train timings or delay status. This leads to confusion, wasted time, and poor travel decisions.
+TRackey is a commuter assistance platform aimed at improving the daily travel experience of local train passengers.  
+The problem it addresses is the lack of structured, accessible, and real-time information for commuters, which often leads to confusion, delays, and inefficient travel decisions. This project lays the foundation for building a scalable solution to manage and present such information effectively.
 
-Solution: Trackey is a web-based application that enables commuters to quickly check current train timings and delay status in real time, helping them make informed and efficient travel decisions.
+---
 
-Target Users: Daily commuters, students, and working professionals.
+## Folder Structure
 
-Scope & Boundaries In Scope
-Search trains by name or number
+src/
+├── app/ # Routes and pages using Next.js App Router
+├── components/ # Reusable UI components
+├── lib/ # Utility functions and helper logic
 
-View current arrival and departure timings
 
-Display delay or on-time status
+### Directory Explanation
 
-Responsive web interface (mobile and desktop)
+- **app/**  
+  Contains all application routes and pages handled by the Next.js App Router.  
+  This is where page-level logic and server-side rendering (SSR) are implemented.
 
-Out of Scope
+- **components/**  
+  Holds reusable UI components that can be shared across multiple pages.  
+  This helps avoid duplication and ensures consistent UI throughout the app.
 
-Mobile application
+- **lib/**  
+  Includes utility functions, helper methods, and configurations.  
+  Keeping logic here separates concerns and improves maintainability.
 
-Ticket booking and payment features
+---
 
-AI-based delay predictions or live GPS tracking
+## Setup Instructions
 
-Roles & Responsibilities Role Responsibilities Frontend UI development using Next.js Backend API integration and data handling Cloud & Deployment AWS/Azure setup and deployment Coordinator Planning, task tracking, documentation
-Sprint Timeline (4 Weeks) Week Focus Week 1 Planning, requirements, UI design, project setup Week 2 Core feature development Week 3 Integration, testing, responsiveness Week 4 Bug fixes, deployment, documentation
-MVP (Minimum Viable Product)
-Train search functionality
+Follow these steps to run the project locally:
 
-Current train timing display
+1. Clone the repository:
+   ```bash
+https://github.com/kalviumcommunity/trackey.git
 
-Delay/on-time status indication
+2. Navigate to the project directory:
 
-Deployed and demo-ready website
+cd trackey
 
-Technology Stack
-Frontend: Next.js
+3. Install dependencies:
 
-Cloud & Backend: AWS, Microsoft Azure
+npm install
 
-Version Control: GitHub
+4. Start the development server:
 
-Functional Requirements
-Users can search trains by name or number
+npm run dev
 
-Users can view live arrival and departure timings
+6. Open the application in your browser:
 
-Users can see delay or on-time status
+http://localhost:3000
 
-System handles unavailable or missing data gracefully
+Reflection
 
-Non-Functional Requirements
-Performance:
+This folder structure is designed to promote clarity, modularity, and scalability.
+By separating routing (app), UI components (components), and utility logic (lib), the codebase becomes easier to understand and extend.
 
-Page load time under 2 seconds
+As the application grows in future sprints—with features like real-time updates,
+notifications, and dashboards—this structure will allow the team to scale efficiently without clutter or major refactoring. It also supports better collaboration by clearly defining responsibilities within the codebase.
 
-API responses within 500 ms where possible
-
-Scalability:
-
-Support at least 100 concurrent users
-
-Reliability:
-
-Graceful handling of API failures
-
-No crashes during normal usage
-
-Usability:
-
-Simple and intuitive UI
-
-Fully responsive across devices
-
-Security:
-
-Secure handling of environment variables and API keys
-
-Success Metrics
-All MVP features implemented and functional
-
-Live deployment accessible via a public URL
-
-Core user flows work without errors
-
-Sprint milestones completed on time
-
-Positive feedback during final demo or review
-
-Reflection & Checkpoint Plan
-Weekly Checkpoints:
-
-End-of-week reviews to track progress and identify blockers
-
-Mid-Sprint Review (End of Week 2):
-
-Evaluate MVP progress and adjust scope if required
-
-Final Review (Week 4):
-
-Compare outcomes against success metrics
-
-Document learnings and improvement areas
+ <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
