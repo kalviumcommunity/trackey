@@ -118,79 +118,68 @@ package.json
 .husky/ folder with pre-commit hook
 
 
-
 ----
+# TRackey
 
-# Environment Variable Management (Next.js)
-
-This project demonstrates secure and professional management of environment variables in a Next.js application. Sensitive configuration values are protected from client-side exposure, ensuring security, portability, and production readiness.
-
----
-
+TRackey is a commuter assistance platform aimed at improving the daily travel experience of local train passengers.  
+The problem it addresses is the lack of structured, accessible, and real-time information for commuters, which often leads to confusion, delays, and inefficient travel decisions. This project lays the foundation for building a scalable solution to manage and present such information effectively.
 
 ---
 
-## 📌 Purpose
+## Folder Structure
 
-The purpose of environment variable management is to:
-- Store sensitive data securely (API keys, database URLs, secrets)
-- Prevent accidental exposure of secrets to the browser
-- Enable easy setup across different environments (development, staging, production)
+src/
+├── app/ # Routes and pages using Next.js App Router
+├── components/ # Reusable UI components
+├── lib/ # Utility functions and helper logic
 
----
 
-## 📁 Environment Files Used
+### Directory Explanation
 
-The project uses the following environment files:
+- **app/**  
+  Contains all application routes and pages handled by the Next.js App Router.  
+  This is where page-level logic and server-side rendering (SSR) are implemented.
 
-### `.env.local`
-- Contains **actual credentials and secrets**
-- Used only for local development
-- **Never committed to GitHub**
+- **components/**  
+  Holds reusable UI components that can be shared across multiple pages.  
+  This helps avoid duplication and ensures consistent UI throughout the app.
 
-### `.env.example`
-- Template file listing all required environment variables
-- Contains placeholder values and documentation
-- Safe to commit and share with teammates
-
----
-
-## 🖥️ Server-Side Environment Variables
-
-These variables are available **only on the server** and must never be accessed inside client components.
-
-| Variable | Description |
-|--------|------------|
-| `DATABASE_URL` | Database connection string |
-| `JWT_SECRET` | Secret key for authentication and token handling |
-
-> These variables do **not** use the `NEXT_PUBLIC_` prefix, ensuring they remain private.
+- **lib/**  
+  Includes utility functions, helper methods, and configurations.  
+  Keeping logic here separates concerns and improves maintainability.
 
 ---
 
-## 🌐 Client-Side Environment Variables
+## Setup Instructions
 
-Client-side variables must start with `NEXT_PUBLIC_` to be safely exposed by Next.js.
+Follow these steps to run the project locally:
 
-| Variable | Description |
-|--------|------------|
-| `NEXT_PUBLIC_API_BASE_URL` | Base URL for frontend API requests |
-
-> Only variables prefixed with `NEXT_PUBLIC_` are accessible in the browser.
-
----
-
-## ⚙️ Setup Instructions
-
-Follow these steps to configure environment variables:
-
-1. Create a local environment file:
+1. Clone the repository:
    ```bash
-   cp .env.example .env.local
-Replace placeholder values in .env.local with actual credentials.
+https://github.com/kalviumcommunity/trackey.git
 
-Start the development server:
+2. Navigate to the project directory:
 
-bash
-Copy code
+cd trackey
+
+3. Install dependencies:
+
+npm install
+
+4. Start the development server:
+
 npm run dev
+
+6. Open the application in your browser:
+
+http://localhost:3000
+
+Reflection
+
+This folder structure is designed to promote clarity, modularity, and scalability.
+By separating routing (app), UI components (components), and utility logic (lib), the codebase becomes easier to understand and extend.
+
+As the application grows in future sprints—with features like real-time updates,
+notifications, and dashboards—this structure will allow the team to scale efficiently without clutter or major refactoring. It also supports better collaboration by clearly defining responsibilities within the codebase.
+
+ <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
