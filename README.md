@@ -1,105 +1,122 @@
-Trackey – Project Plan (4-Week Sprint)
+# Trackey – Code Quality Setup
 
-Problem Statement & Solution Overview
-Train delays are common in India, yet passengers rarely receive real-time updates on current train timings or delay status. This leads to confusion, wasted time, and poor travel decisions.
+## 1️⃣ Project Overview
+This project uses **Next.js 16**, **TypeScript**, **Tailwind CSS**, **ESLint**, **Prettier**, **Husky**, and **lint-staged**.  
+The goal is to ensure **strict type safety**, **consistent code style**, and **automatic pre-commit checks** for high-quality code.
 
-Solution: Trackey is a web-based application that enables commuters to quickly check current train timings and delay status in real time, helping them make informed and efficient travel decisions.
+---
 
-Target Users: Daily commuters, students, and working professionals.
+## 2️⃣ TypeScript Strict Mode
 
-Scope & Boundaries In Scope
-Search trains by name or number
+**tsconfig.json key settings:**
+```json
+{
+  "strict": true,
+  "noImplicitAny": true,
+  "noUnusedLocals": true,
+  "noUnusedParameters": true,
+  "forceConsistentCasingInFileNames": true
+}
+---
 
-View current arrival and departure timings
+3️⃣ ESLint Setup
+.eslintrc.json
 
-Display delay or on-time status
+json
+Copy code
+{
+  "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
+  "rules": {
+    "no-console": "warn",
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"]
+  }
+}
+---
 
-Responsive web interface (mobile and desktop)
+4️⃣ Prettier Setup
+.prettierrc
 
-Out of Scope
+json
+Copy code
+{
+  "singleQuote": false,
+  "semi": true,
+  "tabWidth": 2,
+  "trailingComma": "es5"
+}
+---
 
-Mobile application
+python-repl
+Copy code
+.eslintrc.json 33ms
+.prettierrc 7ms
+app/page.tsx 8ms (unchanged)
+...
+5️⃣ Husky + lint-staged (Pre-commit Hooks)
+package.json lint-staged section:
 
-Ticket booking and payment features
+json
+Copy code
+"lint-staged": {
+  "*.{ts,tsx,js,jsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ]
+}
 
-AI-based delay predictions or live GPS tracking
+---
 
-Roles & Responsibilities Role Responsibilities Frontend UI development using Next.js Backend API integration and data handling Cloud & Deployment AWS/Azure setup and deployment Coordinator Planning, task tracking, documentation
-Sprint Timeline (4 Weeks) Week Focus Week 1 Planning, requirements, UI design, project setup Week 2 Core feature development Week 3 Integration, testing, responsiveness Week 4 Bug fixes, deployment, documentation
-MVP (Minimum Viable Product)
-Train search functionality
+6️⃣ How to Test Locally
+Run dev server
 
-Current train timing display
+bash
+Copy code
+npm run dev
+Open http://localhost:3000 → verify pages load
 
-Delay/on-time status indication
+Run lint
 
-Deployed and demo-ready website
+bash
+Copy code
+npm run lint
+Check for warnings/errors
 
-Technology Stack
-Frontend: Next.js
+Test Prettier
 
-Cloud & Backend: AWS, Microsoft Azure
+bash
+Copy code
+npx prettier --write .
+Code is automatically formatted
 
-Version Control: GitHub
+Test Husky + lint-staged
 
-Functional Requirements
-Users can search trains by name or number
+bash
+Copy code
+git add <file>
+git commit -m "test husky"
+Commit will fail if lint/prettier rules broken
 
-Users can view live arrival and departure timings
+Fix errors → commit will succeed
 
-Users can see delay or on-time status
+7️⃣ Final Notes
+Strict TypeScript + ESLint + Prettier ensures high-quality, maintainable code
 
-System handles unavailable or missing data gracefully
+Husky + lint-staged improves team collaboration and code consistency
 
-Non-Functional Requirements
-Performance:
+Screenshots and terminal logs above demonstrate fully functional setup
 
-Page load time under 2 seconds
+8️⃣ Deliverables Included
+tsconfig.json
 
-API responses within 500 ms where possible
+.eslintrc.json
 
-Scalability:
+.prettierrc
 
-Support at least 100 concurrent users
+package.json
 
-Reliability:
+.husky/ folder with pre-commit hook
 
-Graceful handling of API failures
+Screenshots/logs
 
-No crashes during normal usage
-
-Usability:
-
-Simple and intuitive UI
-
-Fully responsive across devices
-
-Security:
-
-Secure handling of environment variables and API keys
-
-Success Metrics
-All MVP features implemented and functional
-
-Live deployment accessible via a public URL
-
-Core user flows work without errors
-
-Sprint milestones completed on time
-
-Positive feedback during final demo or review
-
-Reflection & Checkpoint Plan
-Weekly Checkpoints:
-
-End-of-week reviews to track progress and identify blockers
-
-Mid-Sprint Review (End of Week 2):
-
-Evaluate MVP progress and adjust scope if required
-
-Final Review (Week 4):
-
-Compare outcomes against success metrics
-
-Document learnings and improvement areas
+----
