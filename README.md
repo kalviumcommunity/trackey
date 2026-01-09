@@ -139,3 +139,34 @@ As the application grows in future sprints—with features like real-time update
 notifications, and dashboards—this structure will allow the team to scale efficiently without clutter or major refactoring. It also supports better collaboration by clearly defining responsibilities within the codebase.
 
  <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
+
+## 🌿 Branching Strategy
+
+We follow a consistent branch naming convention:
+
+- feature/<feature-name> – New features
+- fix/<bug-name> – Bug fixes
+- chore/<task-name> – Maintenance tasks
+- docs/<update-name> – Documentation updates
+
+Examples:
+feature/login-auth  
+fix/navbar-alignment  
+docs/update-readme
+
+## 🔍 Code Review Checklist
+
+- Code follows naming conventions and structure
+- Functionality verified locally
+- No console errors or warnings
+- ESLint & Prettier checks pass
+- Comments and documentation are meaningful
+- Sensitive data is not exposed
+
+
+## 🧠 Reflection
+
+This workflow enforces discipline in how changes are made and reviewed.
+Branch protection and pull request reviews prevent unstable code from
+reaching the main branch, while clear conventions improve collaboration
+and development speed across the team.
