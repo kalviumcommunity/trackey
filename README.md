@@ -65,16 +65,15 @@ A task belongs to one project and has one status.
 
 Represents the status of a task (e.g., Todo, In Progress, Done).
 
-* `id` (Primary Key)
-* `name`
+----
+# TRackey
 
-One status can be associated with multiple tasks.
+TRackey is a commuter assistance platform aimed at improving the daily travel experience of local train passengers.  
+The problem it addresses is the lack of structured, accessible, and real-time information for commuters, which often leads to confusion, delays, and inefficient travel decisions. This project lays the foundation for building a scalable solution to manage and present such information effectively.
 
----
-
-### 5. Comment
 
 Represents comments added to tasks by users.
+
 
 * `id` (Primary Key)
 * `content`
@@ -83,99 +82,60 @@ Represents comments added to tasks by users.
 * `createdAt`
 
 A comment belongs to one task and one user.
+## Folder Structure
+
+src/
+├── app/ # Routes and pages using Next.js App Router
+├── components/ # Reusable UI components
+├── lib/ # Utility functions and helper logic
+
+
+### Directory Explanation
+
+- **app/**  
+  Contains all application routes and pages handled by the Next.js App Router.  
+  This is where page-level logic and server-side rendering (SSR) are implemented.
+
+- **components/**  
+  Holds reusable UI components that can be shared across multiple pages.  
+  This helps avoid duplication and ensures consistent UI throughout the app.
+
+- **lib/**  
+  Includes utility functions, helper methods, and configurations.  
+  Keeping logic here separates concerns and improves maintainability.
 
 ---
 
-## Relationships Summary
+## Setup Instructions
 
-* **User → Project**: One-to-Many
-* **Project → Task**: One-to-Many
-* **Status → Task**: One-to-Many
-* **Task → Comment**: One-to-Many
-* **User → Comment**: One-to-Many
+Follow these steps to run the project locally:
 
----
+1. Clone the repository:
+   ```bash
+https://github.com/kalviumcommunity/trackey.git
 
-## Keys and Constraints
+2. Navigate to the project directory:
 
-### Primary Keys
+cd trackey
 
-* All tables use `id` as the primary key.
+3. Install dependencies:
 
-### Foreign Keys
+npm install
 
-* `Project.userId` → `User.id`
-* `Task.projectId` → `Project.id`
-* `Task.statusId` → `Status.id`
-* `Comment.taskId` → `Task.id`
-* `Comment.userId` → `User.id`
+4. Start the development server:
 
-### Constraints
+npm run dev
 
-* `email` in **User** table is **UNIQUE**
-* Required fields use **NOT NULL** constraints
-* Referential integrity enforced via Prisma relations
+6. Open the application in your browser:
 
----
+http://localhost:3000
 
-## Normalization
+Reflection
 
-### First Normal Form (1NF)
+This folder structure is designed to promote clarity, modularity, and scalability.
+By separating routing (app), UI components (components), and utility logic (lib), the codebase becomes easier to understand and extend.
 
-* All fields contain atomic values
-* No repeating groups or multivalued attributes
+As the application grows in future sprints—with features like real-time updates,
+notifications, and dashboards—this structure will allow the team to scale efficiently without clutter or major refactoring. It also supports better collaboration by clearly defining responsibilities within the codebase.
 
-### Second Normal Form (2NF)
-
-* All non-key attributes depend on the full primary key
-
-### Third Normal Form (3NF)
-
-* No transitive dependencies
-* Status and comments are stored in separate tables
-
-The schema is fully normalized and avoids redundancy.
-
----
-
-## Scalability and Design Benefits
-
-* Clean separation of concerns
-* Easy to extend with features like:
-
-  * Task priority
-  * Teams and roles
-  * Activity logs
-* Optimized querying using foreign keys
-
----
-
-## Common Queries Supported
-
-* Fetch all projects for a user
-* Fetch all tasks under a project
-* Filter tasks by status
-* View comments for a task
-
----
-
-## Prisma Commands Used
-
-```bash
-npx prisma migrate dev --name init_schema
-npx prisma db seed
-npx prisma studio
-```
-
----
-
-## Screenshots Included
-
-* Prisma Studio showing all tables and relationships
-* Terminal output of successful migration and seeding
-
----
-
-## Conclusion
-
-This schema efficiently models a real-world task management system while following database best practices, ensuring consistency, scalability, and maintainability.
+ <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
