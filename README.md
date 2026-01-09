@@ -1,122 +1,69 @@
-# Trackey – Code Quality Setup
+---
 
-## 1️⃣ Project Overview
-This project uses **Next.js 16**, **TypeScript**, **Tailwind CSS**, **ESLint**, **Prettier**, **Husky**, and **lint-staged**.  
-The goal is to ensure **strict type safety**, **consistent code style**, and **automatic pre-commit checks** for high-quality code.
+## Project Overview
+
+**Trackey** is a task and project management application designed to help users organize projects, track tasks, assign statuses, and collaborate using comments.
+
+This assignment  focuses on **database schema design**, **relationships**, **constraints**, and **normalization** using **PostgreSQL** and **Prisma ORM**.
+
+--
+
+## Tech Stack
+
+* **Database**: PostgreSQL
+* **ORM**: Prisma
+* **Backend: Next.js
+* **Tooling**: Prisma Studio
 
 ---
 
-## 2️⃣ TypeScript Strict Mode
+## Entities (Tables)
 
-**tsconfig.json key settings:**
-```json
-{
-  "strict": true,
-  "noImplicitAny": true,
-  "noUnusedLocals": true,
-  "noUnusedParameters": true,
-  "forceConsistentCasingInFileNames": true
-}
----
+### 1. User
 
-3️⃣ ESLint Setup
-.eslintrc.json
+Represents a registered user of Trackey.
 
-json
-Copy code
-{
-  "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
-  "rules": {
-    "no-console": "warn",
-    "semi": ["error", "always"],
-    "quotes": ["error", "double"]
-  }
-}
----
+* `id` (Primary Key)
+* `name`
+* `email` (Unique)
+* `createdAt`
 
-4️⃣ Prettier Setup
-.prettierrc
-
-json
-Copy code
-{
-  "singleQuote": false,
-  "semi": true,
-  "tabWidth": 2,
-  "trailingComma": "es5"
-}
----
-
-python-repl
-Copy code
-.eslintrc.json 33ms
-.prettierrc 7ms
-app/page.tsx 8ms (unchanged)
-...
-5️⃣ Husky + lint-staged (Pre-commit Hooks)
-package.json lint-staged section:
-
-json
-Copy code
-"lint-staged": {
-  "*.{ts,tsx,js,jsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ]
-}
+A user can create multiple projects and comments.
 
 ---
 
-6️⃣ How to Test Locally
-Run dev server
+### 2. Project
 
-bash
-Copy code
-npm run dev
-Open http://localhost:3000 → verify pages load
+Represents a project created by a user.
 
-Run lint
+* `id` (Primary Key)
+* `name`
+* `description`
+* `userId` (Foreign Key → User)
+* `createdAt`
 
-bash
-Copy code
-npm run lint
-Check for warnings/errors
+A project belongs to one user and contains many tasks.
 
-Test Prettier
+---
 
-bash
-Copy code
-npx prettier --write .
-Code is automatically formatted
+### 3. Task
 
-Test Husky + lint-staged
+Represents an individual task within a project.
 
-bash
-Copy code
-git add <file>
-git commit -m "test husky"
-Commit will fail if lint/prettier rules broken
+* `id` (Primary Key)
+* `title`
+* `description`
+* `projectId` (Foreign Key → Project)
+* `statusId` (Foreign Key → Status)
+* `createdAt`
 
-Fix errors → commit will succeed
+A task belongs to one project and has one status.
 
-7️⃣ Final Notes
-Strict TypeScript + ESLint + Prettier ensures high-quality, maintainable code
+---
 
-Husky + lint-staged improves team collaboration and code consistency
+### 4. Status
 
-Screenshots and terminal logs above demonstrate fully functional setup
-
-8️⃣ Deliverables Included
-tsconfig.json
-
-.eslintrc.json
-
-.prettierrc
-
-package.json
-
-.husky/ folder with pre-commit hook
-
+Represents the status of a task (e.g., Todo, In Progress, Done).
 
 ----
 # TRackey
@@ -124,8 +71,17 @@ package.json
 TRackey is a commuter assistance platform aimed at improving the daily travel experience of local train passengers.  
 The problem it addresses is the lack of structured, accessible, and real-time information for commuters, which often leads to confusion, delays, and inefficient travel decisions. This project lays the foundation for building a scalable solution to manage and present such information effectively.
 
----
 
+Represents comments added to tasks by users.
+
+
+* `id` (Primary Key)
+* `content`
+* `taskId` (Foreign Key → Task)
+* `userId` (Foreign Key → User)
+* `createdAt`
+
+A comment belongs to one task and one user.
 ## Folder Structure
 
 src/
