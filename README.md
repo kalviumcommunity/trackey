@@ -140,33 +140,36 @@ notifications, and dashboards—this structure will allow the team to scale effi
 
  <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
 
-## 🌿 Branching Strategy
 
-We follow a consistent branch naming convention:
+Docker Assignment 2.12 
+Dockerfile
 
-- feature/<feature-name> – New features
-- fix/<bug-name> – Bug fixes
-- chore/<task-name> – Maintenance tasks
-- docs/<update-name> – Documentation updates
+Uses node:18-alpine.
 
-Examples:
-feature/login-auth  
-fix/navbar-alignment  
-docs/update-readme
+Installs dependencies, copies code, exposes 5000, runs npm start.
 
-## 🔍 Code Review Checklist
+Docker Compose
 
-- Code follows naming conventions and structure
-- Functionality verified locally
-- No console errors or warnings
-- ESLint & Prettier checks pass
-- Comments and documentation are meaningful
-- Sensitive data is not exposed
+backend → built from Dockerfile, uses .env, runs on port 5000.
 
+mongo → mongo:latest, port 27017, persistent volume.
 
-## 🧠 Reflection
+Network & Volumes
 
-This workflow enforces discipline in how changes are made and reviewed.
-Branch protection and pull request reviews prevent unstable code from
-reaching the main branch, while clear conventions improve collaboration
-and development speed across the team.
+Custom trackey-net network for backend ↔ mongo.
+
+mongo-data volume to persist DB.
+
+Env Variables
+
+Loaded from .env using env_file:.
+
+Issues & Fixes
+
+Docker daemon off → start Docker Desktop.
+
+DNS pull error → restart Docker.
+
+Mongo connection error → use mongodb://mongo:27017/db.
+
+Port conflict → stop local Node app.
