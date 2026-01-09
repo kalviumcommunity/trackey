@@ -139,3 +139,37 @@ As the application grows in future sprints—with features like real-time update
 notifications, and dashboards—this structure will allow the team to scale efficiently without clutter or major refactoring. It also supports better collaboration by clearly defining responsibilities within the codebase.
 
  <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
+
+
+Docker Assignment 2.12 
+Dockerfile
+
+Uses node:18-alpine.
+
+Installs dependencies, copies code, exposes 5000, runs npm start.
+
+Docker Compose
+
+backend → built from Dockerfile, uses .env, runs on port 5000.
+
+mongo → mongo:latest, port 27017, persistent volume.
+
+Network & Volumes
+
+Custom trackey-net network for backend ↔ mongo.
+
+mongo-data volume to persist DB.
+
+Env Variables
+
+Loaded from .env using env_file:.
+
+Issues & Fixes
+
+Docker daemon off → start Docker Desktop.
+
+DNS pull error → restart Docker.
+
+Mongo connection error → use mongodb://mongo:27017/db.
+
+Port conflict → stop local Node app.
