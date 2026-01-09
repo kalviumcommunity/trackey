@@ -1,196 +1,181 @@
-# Trackey – Code Quality Setup
+---
 
-## 1️⃣ Project Overview
-This project uses **Next.js 16**, **TypeScript**, **Tailwind CSS**, **ESLint**, **Prettier**, **Husky**, and **lint-staged**.  
-The goal is to ensure **strict type safety**, **consistent code style**, and **automatic pre-commit checks** for high-quality code.
+## Project Overview
+
+**Trackey** is a task and project management application designed to help users organize projects, track tasks, assign statuses, and collaborate using comments.
+
+This assignment  focuses on **database schema design**, **relationships**, **constraints**, and **normalization** using **PostgreSQL** and **Prisma ORM**.
+
+--
+
+## Tech Stack
+
+* **Database**: PostgreSQL
+* **ORM**: Prisma
+* **Backend: Next.js
+* **Tooling**: Prisma Studio
 
 ---
 
-## 2️⃣ TypeScript Strict Mode
+## Entities (Tables)
 
-**tsconfig.json key settings:**
-```json
-{
-  "strict": true,
-  "noImplicitAny": true,
-  "noUnusedLocals": true,
-  "noUnusedParameters": true,
-  "forceConsistentCasingInFileNames": true
-}
----
+### 1. User
 
-3️⃣ ESLint Setup
-.eslintrc.json
+Represents a registered user of Trackey.
 
-json
-Copy code
-{
-  "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
-  "rules": {
-    "no-console": "warn",
-    "semi": ["error", "always"],
-    "quotes": ["error", "double"]
-  }
-}
----
+* `id` (Primary Key)
+* `name`
+* `email` (Unique)
+* `createdAt`
 
-4️⃣ Prettier Setup
-.prettierrc
-
-json
-Copy code
-{
-  "singleQuote": false,
-  "semi": true,
-  "tabWidth": 2,
-  "trailingComma": "es5"
-}
----
-
-python-repl
-Copy code
-.eslintrc.json 33ms
-.prettierrc 7ms
-app/page.tsx 8ms (unchanged)
-...
-5️⃣ Husky + lint-staged (Pre-commit Hooks)
-package.json lint-staged section:
-
-json
-Copy code
-"lint-staged": {
-  "*.{ts,tsx,js,jsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ]
-}
+A user can create multiple projects and comments.
 
 ---
 
-6️⃣ How to Test Locally
-Run dev server
+### 2. Project
 
-bash
-Copy code
-npm run dev
-Open http://localhost:3000 → verify pages load
+Represents a project created by a user.
 
-Run lint
+* `id` (Primary Key)
+* `name`
+* `description`
+* `userId` (Foreign Key → User)
+* `createdAt`
 
-bash
-Copy code
-npm run lint
-Check for warnings/errors
-
-Test Prettier
-
-bash
-Copy code
-npx prettier --write .
-Code is automatically formatted
-
-Test Husky + lint-staged
-
-bash
-Copy code
-git add <file>
-git commit -m "test husky"
-Commit will fail if lint/prettier rules broken
-
-Fix errors → commit will succeed
-
-7️⃣ Final Notes
-Strict TypeScript + ESLint + Prettier ensures high-quality, maintainable code
-
-Husky + lint-staged improves team collaboration and code consistency
-
-Screenshots and terminal logs above demonstrate fully functional setup
-
-8️⃣ Deliverables Included
-tsconfig.json
-
-.eslintrc.json
-
-.prettierrc
-
-package.json
-
-.husky/ folder with pre-commit hook
-
-
-
-----
-
-# Environment Variable Management (Next.js)
-
-This project demonstrates secure and professional management of environment variables in a Next.js application. Sensitive configuration values are protected from client-side exposure, ensuring security, portability, and production readiness.
+A project belongs to one user and contains many tasks.
 
 ---
 
+### 3. Task
+
+Represents an individual task within a project.
+
+* `id` (Primary Key)
+* `title`
+* `description`
+* `projectId` (Foreign Key → Project)
+* `statusId` (Foreign Key → Status)
+* `createdAt`
+
+A task belongs to one project and has one status.
 
 ---
 
-## 📌 Purpose
+### 4. Status
 
-The purpose of environment variable management is to:
-- Store sensitive data securely (API keys, database URLs, secrets)
-- Prevent accidental exposure of secrets to the browser
-- Enable easy setup across different environments (development, staging, production)
+Represents the status of a task (e.g., Todo, In Progress, Done).
 
----
+* `id` (Primary Key)
+* `name`
 
-## 📁 Environment Files Used
-
-The project uses the following environment files:
-
-### `.env.local`
-- Contains **actual credentials and secrets**
-- Used only for local development
-- **Never committed to GitHub**
-
-### `.env.example`
-- Template file listing all required environment variables
-- Contains placeholder values and documentation
-- Safe to commit and share with teammates
+One status can be associated with multiple tasks.
 
 ---
 
-## 🖥️ Server-Side Environment Variables
+### 5. Comment
 
-These variables are available **only on the server** and must never be accessed inside client components.
+Represents comments added to tasks by users.
 
-| Variable | Description |
-|--------|------------|
-| `DATABASE_URL` | Database connection string |
-| `JWT_SECRET` | Secret key for authentication and token handling |
+* `id` (Primary Key)
+* `content`
+* `taskId` (Foreign Key → Task)
+* `userId` (Foreign Key → User)
+* `createdAt`
 
-> These variables do **not** use the `NEXT_PUBLIC_` prefix, ensuring they remain private.
-
----
-
-## 🌐 Client-Side Environment Variables
-
-Client-side variables must start with `NEXT_PUBLIC_` to be safely exposed by Next.js.
-
-| Variable | Description |
-|--------|------------|
-| `NEXT_PUBLIC_API_BASE_URL` | Base URL for frontend API requests |
-
-> Only variables prefixed with `NEXT_PUBLIC_` are accessible in the browser.
+A comment belongs to one task and one user.
 
 ---
 
-## ⚙️ Setup Instructions
+## Relationships Summary
 
-Follow these steps to configure environment variables:
+* **User → Project**: One-to-Many
+* **Project → Task**: One-to-Many
+* **Status → Task**: One-to-Many
+* **Task → Comment**: One-to-Many
+* **User → Comment**: One-to-Many
 
-1. Create a local environment file:
-   ```bash
-   cp .env.example .env.local
-Replace placeholder values in .env.local with actual credentials.
+---
 
-Start the development server:
+## Keys and Constraints
 
-bash
-Copy code
-npm run dev
+### Primary Keys
+
+* All tables use `id` as the primary key.
+
+### Foreign Keys
+
+* `Project.userId` → `User.id`
+* `Task.projectId` → `Project.id`
+* `Task.statusId` → `Status.id`
+* `Comment.taskId` → `Task.id`
+* `Comment.userId` → `User.id`
+
+### Constraints
+
+* `email` in **User** table is **UNIQUE**
+* Required fields use **NOT NULL** constraints
+* Referential integrity enforced via Prisma relations
+
+---
+
+## Normalization
+
+### First Normal Form (1NF)
+
+* All fields contain atomic values
+* No repeating groups or multivalued attributes
+
+### Second Normal Form (2NF)
+
+* All non-key attributes depend on the full primary key
+
+### Third Normal Form (3NF)
+
+* No transitive dependencies
+* Status and comments are stored in separate tables
+
+The schema is fully normalized and avoids redundancy.
+
+---
+
+## Scalability and Design Benefits
+
+* Clean separation of concerns
+* Easy to extend with features like:
+
+  * Task priority
+  * Teams and roles
+  * Activity logs
+* Optimized querying using foreign keys
+
+---
+
+## Common Queries Supported
+
+* Fetch all projects for a user
+* Fetch all tasks under a project
+* Filter tasks by status
+* View comments for a task
+
+---
+
+## Prisma Commands Used
+
+```bash
+npx prisma migrate dev --name init_schema
+npx prisma db seed
+npx prisma studio
+```
+
+---
+
+## Screenshots Included
+
+* Prisma Studio showing all tables and relationships
+* Terminal output of successful migration and seeding
+
+---
+
+## Conclusion
+
+This schema efficiently models a real-world task management system while following database best practices, ensuring consistency, scalability, and maintainability.
