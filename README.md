@@ -158,3 +158,30 @@ DNS pull error → restart Docker.
 Mongo connection error → use mongodb://mongo:27017/db.
 
 Port conflict → stop local Node app.
+
+
+Assignment 2.16
+
+1. Ran Prisma Commands
+
+After setting the .env, executed:
+
+npx prisma generate
+npx prisma migrate dev
+
+
+This applied the schema and ensured the database was synced.
+
+Then opened the Prisma UI:
+
+npx prisma studio
+
+2. Verified Folder Structure & Purpose
+
+Backend is responsible for storing and managing tracking-related data
+
+3. Server Setup
+
+After completing the environment and Prisma setup, the development server was run using:
+npm run dev
+Everything loaded successfully once dependencies and env variables were correctly configured.
