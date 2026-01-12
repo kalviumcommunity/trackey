@@ -50,120 +50,111 @@ This command created:
 
 The database connection is configured using the `DATABASE_URL` provided by Prisma in the `.env` file.
 
-```env
-DATABASE_URL="prisma+postgres://localhost:51213/?api_key=..."
-```
+----
+# TRackey
 
-This uses **Prisma Postgres**, which allows easy local development without manual database setup.
+TRackey is a commuter assistance platform aimed at improving the daily travel experience of local train passengers.  
+The problem it addresses is the lack of structured, accessible, and real-time information for commuters, which often leads to confusion, delays, and inefficient travel decisions. This project lays the foundation for building a scalable solution to manage and present such information effectively.
 
----
 
-### 3️⃣ Define Database Models
+Represents comments added to tasks by users.
 
-The database schema is defined in `prisma/schema.prisma`.
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+* `id` (Primary Key)
+* `content`
+* `taskId` (Foreign Key → Task)
+* `userId` (Foreign Key → User)
+* `createdAt`
 
-generator client {
-  provider = "prisma-client-js"
-}
+A comment belongs to one task and one user.
+## Folder Structure
 
-model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  createdAt DateTime  @default(now())
-  projects  Project[]
-}
+src/
+├── app/ # Routes and pages using Next.js App Router
+├── components/ # Reusable UI components
+├── lib/ # Utility functions and helper logic
 
-model Project {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
-}
-```
 
-This schema defines:
+### Directory Explanation
 
-* A `User` table
-* A `Project` table
-* A one-to-many relationship between User and Project
+- **app/**  
+  Contains all application routes and pages handled by the Next.js App Router.  
+  This is where page-level logic and server-side rendering (SSR) are implemented.
+
+- **components/**  
+  Holds reusable UI components that can be shared across multiple pages.  
+  This helps avoid duplication and ensures consistent UI throughout the app.
+
+- **lib/**  
+  Includes utility functions, helper methods, and configurations.  
+  Keeping logic here separates concerns and improves maintainability.
 
 ---
 
-### 4️⃣ Generate Prisma Client
+## Setup Instructions
 
-```bash
-npx prisma generate
-```
+Follow these steps to run the project locally:
 
-This generates the Prisma Client, which is used to perform database queries inside the application.
+1. Clone the repository:
+   ```bash
+https://github.com/kalviumcommunity/trackey.git
 
----
+2. Navigate to the project directory:
 
-### 5️⃣ Prisma Client Initialisation
+cd trackey
 
-A reusable Prisma client is created in `src/lib/prisma.ts`.
+3. Install dependencies:
 
-```ts
-import { PrismaClient } from '@prisma/client';
+npm install
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+4. Start the development server:
 
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
-  });
+npm run dev
 
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
-```
+6. Open the application in your browser:
 
-This ensures only **one Prisma Client instance** is used during development, preventing multiple database connections.
+http://localhost:3000
 
----
+Reflection
 
-### 6️⃣ Apply Migration and Verify Connection
+This folder structure is designed to promote clarity, modularity, and scalability.
+By separating routing (app), UI components (components), and utility logic (lib), the codebase becomes easier to understand and extend.
 
-```bash
-npx prisma migrate dev --name init
-```
+As the application grows in future sprints—with features like real-time updates,
+notifications, and dashboards—this structure will allow the team to scale efficiently without clutter or major refactoring. It also supports better collaboration by clearly defining responsibilities within the codebase.
 
-To visually verify the database and tables:
+ <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
 
-```bash
-npx prisma studio
-```
 
-Tables were successfully created and accessed without errors.
+Docker Assignment 2.12 
+Dockerfile
 
----
+Uses node:18-alpine.
 
-## ✅ Verification
+Installs dependencies, copies code, exposes 5000, runs npm start.
 
-* Prisma Client generated successfully
-* Database connected without errors
-* Prisma Studio displays the tables
-* Test query `prisma.user.findMany()` executed successfully
+Docker Compose
 
----
+backend → built from Dockerfile, uses .env, runs on port 5000.
 
-## 🧠 Reflection
+mongo → mongo:latest, port 27017, persistent volume.
 
-Prisma ORM simplifies database access by providing a clean, type-safe API. It reduces boilerplate SQL, prevents common runtime errors, and improves developer productivity. The Prisma Client ensures reliable and maintainable database interactions, making the project scalable and production-ready.
+Network & Volumes
 
----
+Custom trackey-net network for backend ↔ mongo.
 
-## 🏁 Conclusion
+mongo-data volume to persist DB.
 
-Prisma ORM was successfully installed, configured, and connected to the database. The Prisma Client was generated and initialised correctly, and the database connection was verified using migrations and Prisma Studio.
+Env Variables
 
----
+Loaded from .env using env_file:.
 
+Issues & Fixes
+
+Docker daemon off → start Docker Desktop.
+
+DNS pull error → restart Docker.
+
+Mongo connection error → use mongodb://mongo:27017/db.
+
+Port conflict → stop local Node app.
