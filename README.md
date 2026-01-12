@@ -1,181 +1,169 @@
----
 
-## Project Overview
 
-**Trackey** is a task and project management application designed to help users organize projects, track tasks, assign statuses, and collaborate using comments.
+# 📘 Prisma ORM Setup & Client Initialisation
 
-This assignment  focuses on **database schema design**, **relationships**, **constraints**, and **normalization** using **PostgreSQL** and **Prisma ORM**.
+## 📌 Overview
 
---
-
-## Tech Stack
-
-* **Database**: PostgreSQL
-* **ORM**: Prisma
-* **Backend: Next.js
-* **Tooling**: Prisma Studio
+This project uses **Prisma ORM** to connect a **Next.js backend** with a **PostgreSQL database**. Prisma acts as a bridge between the application and the database, making database operations simple, type-safe, and reliable.
 
 ---
 
-## Entities (Tables)
+## 🎯 Objective
 
-### 1. User
+The goal of this task is to:
 
-Represents a registered user of Trackey.
-
-* `id` (Primary Key)
-* `name`
-* `email` (Unique)
-* `createdAt`
-
-A user can create multiple projects and comments.
+* Integrate Prisma ORM into the project
+* Define database models using Prisma schema
+* Generate and initialise the Prisma Client
+* Verify a successful database connection
 
 ---
 
-### 2. Project
+## 🛠️ Tools & Technologies Used
 
-Represents a project created by a user.
-
-* `id` (Primary Key)
-* `name`
-* `description`
-* `userId` (Foreign Key → User)
-* `createdAt`
-
-A project belongs to one user and contains many tasks.
+* **Prisma ORM**
+* **Prisma Client**
+* **Prisma Postgres**
+* **Next.js**
+* **Node.js**
 
 ---
 
-### 3. Task
+## ⚙️ Setup Steps
 
-Represents an individual task within a project.
-
-* `id` (Primary Key)
-* `title`
-* `description`
-* `projectId` (Foreign Key → Project)
-* `statusId` (Foreign Key → Status)
-* `createdAt`
-
-A task belongs to one project and has one status.
-
----
-
-### 4. Status
-
-Represents the status of a task (e.g., Todo, In Progress, Done).
-
-* `id` (Primary Key)
-* `name`
-
-One status can be associated with multiple tasks.
-
----
-
-### 5. Comment
-
-Represents comments added to tasks by users.
-
-* `id` (Primary Key)
-* `content`
-* `taskId` (Foreign Key → Task)
-* `userId` (Foreign Key → User)
-* `createdAt`
-
-A comment belongs to one task and one user.
-
----
-
-## Relationships Summary
-
-* **User → Project**: One-to-Many
-* **Project → Task**: One-to-Many
-* **Status → Task**: One-to-Many
-* **Task → Comment**: One-to-Many
-* **User → Comment**: One-to-Many
-
----
-
-## Keys and Constraints
-
-### Primary Keys
-
-* All tables use `id` as the primary key.
-
-### Foreign Keys
-
-* `Project.userId` → `User.id`
-* `Task.projectId` → `Project.id`
-* `Task.statusId` → `Status.id`
-* `Comment.taskId` → `Task.id`
-* `Comment.userId` → `User.id`
-
-### Constraints
-
-* `email` in **User** table is **UNIQUE**
-* Required fields use **NOT NULL** constraints
-* Referential integrity enforced via Prisma relations
-
----
-
-## Normalization
-
-### First Normal Form (1NF)
-
-* All fields contain atomic values
-* No repeating groups or multivalued attributes
-
-### Second Normal Form (2NF)
-
-* All non-key attributes depend on the full primary key
-
-### Third Normal Form (3NF)
-
-* No transitive dependencies
-* Status and comments are stored in separate tables
-
-The schema is fully normalized and avoids redundancy.
-
----
-
-## Scalability and Design Benefits
-
-* Clean separation of concerns
-* Easy to extend with features like:
-
-  * Task priority
-  * Teams and roles
-  * Activity logs
-* Optimized querying using foreign keys
-
----
-
-## Common Queries Supported
-
-* Fetch all projects for a user
-* Fetch all tasks under a project
-* Filter tasks by status
-* View comments for a task
-
----
-
-## Prisma Commands Used
+### 1️⃣ Install and Initialize Prisma
 
 ```bash
-npx prisma migrate dev --name init_schema
-npx prisma db seed
+npm install prisma --save-dev
+npx prisma init
+```
+
+This command created:
+
+* A `/prisma` folder
+* A `schema.prisma` file
+* A `.env` file with `DATABASE_URL`
+
+---
+
+### 2️⃣ Database Configuration
+
+The database connection is configured using the `DATABASE_URL` provided by Prisma in the `.env` file.
+
+```env
+DATABASE_URL="prisma+postgres://localhost:51213/?api_key=..."
+```
+
+This uses **Prisma Postgres**, which allows easy local development without manual database setup.
+
+---
+
+### 3️⃣ Define Database Models
+
+The database schema is defined in `prisma/schema.prisma`.
+
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  projects  Project[]
+}
+
+model Project {
+  id     Int    @id @default(autoincrement())
+  name   String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+}
+```
+
+This schema defines:
+
+* A `User` table
+* A `Project` table
+* A one-to-many relationship between User and Project
+
+---
+
+### 4️⃣ Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+This generates the Prisma Client, which is used to perform database queries inside the application.
+
+---
+
+### 5️⃣ Prisma Client Initialisation
+
+A reusable Prisma client is created in `src/lib/prisma.ts`.
+
+```ts
+import { PrismaClient } from '@prisma/client';
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ['query', 'info', 'warn', 'error'],
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
+```
+
+This ensures only **one Prisma Client instance** is used during development, preventing multiple database connections.
+
+---
+
+### 6️⃣ Apply Migration and Verify Connection
+
+```bash
+npx prisma migrate dev --name init
+```
+
+To visually verify the database and tables:
+
+```bash
 npx prisma studio
 ```
 
----
-
-## Screenshots Included
-
-* Prisma Studio showing all tables and relationships
-* Terminal output of successful migration and seeding
+Tables were successfully created and accessed without errors.
 
 ---
 
-## Conclusion
+## ✅ Verification
 
-This schema efficiently models a real-world task management system while following database best practices, ensuring consistency, scalability, and maintainability.
+* Prisma Client generated successfully
+* Database connected without errors
+* Prisma Studio displays the tables
+* Test query `prisma.user.findMany()` executed successfully
+
+---
+
+## 🧠 Reflection
+
+Prisma ORM simplifies database access by providing a clean, type-safe API. It reduces boilerplate SQL, prevents common runtime errors, and improves developer productivity. The Prisma Client ensures reliable and maintainable database interactions, making the project scalable and production-ready.
+
+---
+
+## 🏁 Conclusion
+
+Prisma ORM was successfully installed, configured, and connected to the database. The Prisma Client was generated and initialised correctly, and the database connection was verified using migrations and Prisma Studio.
+
+---
+
