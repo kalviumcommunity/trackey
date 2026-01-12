@@ -1,69 +1,54 @@
----
 
-## Project Overview
 
-**Trackey** is a task and project management application designed to help users organize projects, track tasks, assign statuses, and collaborate using comments.
+# 📘 Prisma ORM Setup & Client Initialisation
 
-This assignment  focuses on **database schema design**, **relationships**, **constraints**, and **normalization** using **PostgreSQL** and **Prisma ORM**.
+## 📌 Overview
 
---
-
-## Tech Stack
-
-* **Database**: PostgreSQL
-* **ORM**: Prisma
-* **Backend: Next.js
-* **Tooling**: Prisma Studio
+This project uses **Prisma ORM** to connect a **Next.js backend** with a **PostgreSQL database**. Prisma acts as a bridge between the application and the database, making database operations simple, type-safe, and reliable.
 
 ---
 
-## Entities (Tables)
+## 🎯 Objective
 
-### 1. User
+The goal of this task is to:
 
-Represents a registered user of Trackey.
-
-* `id` (Primary Key)
-* `name`
-* `email` (Unique)
-* `createdAt`
-
-A user can create multiple projects and comments.
+* Integrate Prisma ORM into the project
+* Define database models using Prisma schema
+* Generate and initialise the Prisma Client
+* Verify a successful database connection
 
 ---
 
-### 2. Project
+## 🛠️ Tools & Technologies Used
 
-Represents a project created by a user.
-
-* `id` (Primary Key)
-* `name`
-* `description`
-* `userId` (Foreign Key → User)
-* `createdAt`
-
-A project belongs to one user and contains many tasks.
+* **Prisma ORM**
+* **Prisma Client**
+* **Prisma Postgres**
+* **Next.js**
+* **Node.js**
 
 ---
 
-### 3. Task
+## ⚙️ Setup Steps
 
-Represents an individual task within a project.
+### 1️⃣ Install and Initialize Prisma
 
-* `id` (Primary Key)
-* `title`
-* `description`
-* `projectId` (Foreign Key → Project)
-* `statusId` (Foreign Key → Status)
-* `createdAt`
+```bash
+npm install prisma --save-dev
+npx prisma init
+```
 
-A task belongs to one project and has one status.
+This command created:
+
+* A `/prisma` folder
+* A `schema.prisma` file
+* A `.env` file with `DATABASE_URL`
 
 ---
 
-### 4. Status
+### 2️⃣ Database Configuration
 
-Represents the status of a task (e.g., Todo, In Progress, Done).
+The database connection is configured using the `DATABASE_URL` provided by Prisma in the `.env` file.
 
 ----
 # TRackey

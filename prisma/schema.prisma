@@ -1,10 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
 }
 
 model User {
@@ -12,61 +12,12 @@ model User {
   name      String
   email     String    @unique
   createdAt DateTime  @default(now())
-
   projects  Project[]
-  tasks     Task[]
-  comments  Comment[]
 }
 
 model Project {
-  id        Int       @id @default(autoincrement())
-  title     String
-  createdAt DateTime  @default(now())
-
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  tasks     Task[]
-
-  @@index([userId])
-}
-
-model Status {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-
-  tasks Task[]
-}
-
-model Task {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String?
-  createdAt   DateTime  @default(now())
-
-  userId      Int
-  projectId   Int
-  statusId    Int
-
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  status      Status    @relation(fields: [statusId], references: [id])
-
-  comments    Comment[]
-
-  @@index([userId])
-  @@index([projectId])
-  @@index([statusId])
-}
-
-model Comment {
-  id        Int       @id @default(autoincrement())
-  content   String
-  createdAt DateTime  @default(now())
-
-  taskId    Int
-  userId    Int
-
-  task      Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     Int    @id @default(autoincrement())
+  name   String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
 }
