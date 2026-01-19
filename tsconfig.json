@@ -4,11 +4,11 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true, // already present ✅
-    "noImplicitAny": true, // add: prevents implicit 'any' types
-    "noUnusedLocals": true, // add: catches unused variables
-    "noUnusedParameters": true, // add: catches unused function params
-    "forceConsistentCasingInFileNames": true, // add: avoids file name case issues
+    "strict": true, 
+    "noImplicitAny": true, 
+    "noUnusedLocals": true, 
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
