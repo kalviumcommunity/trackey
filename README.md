@@ -167,3 +167,72 @@ Prisma ORM was successfully installed, configured, and connected to the database
 
 ---
 
+API Route Structure and Naming
+
+This project follows RESTful API design principles using Next.js App Router file-based routing.
+All backend API endpoints are organized under the /api directory to ensure clarity, predictability, and maintainability.
+
+📁 API Folder Structure
+app/
+ └── api/
+     ├── users/
+     │   └── route.ts
+     ├── trains/
+     │   └── route.ts
+     └── bookings/
+         └── route.ts
+
+
+Each route.ts file automatically maps to a REST API endpoint in Next.js.
+
+🌐 API Endpoints
+HTTP Method	Endpoint	Description
+GET	/api/users	Fetch all users
+POST	/api/users	Create a new user
+GET	/api/trains	Fetch trains with pagination
+GET	/api/bookings	Fetch all bookings
+🔹 REST Design Principles Followed
+
+Resource-based routing using plural nouns
+
+Lowercase route names
+
+HTTP methods define actions (GET, POST)
+
+No verbs used in URLs
+
+Clear separation between UI routes and API routes
+
+🔹 Pagination Support
+
+The /api/trains endpoint supports pagination using query parameters:
+
+/api/trains?page=1&limit=10
+
+
+This helps handle large datasets efficiently and keeps responses lightweight.
+
+⚠️ Error Handling
+
+Meaningful HTTP status codes and error messages are returned when data is unavailable.
+
+Example:
+
+404 Not Found when no bookings exist
+
+This improves debugging and API usability.
+
+🧪 API Testing
+
+All API endpoints were tested using:
+
+Browser
+
+curl / Postman
+
+Screenshots of successful API responses are included as evidence.
+
+🧠 Reflection
+
+Using a consistent and RESTful API route structure makes backend development more predictable and easier to maintain.
+Clear naming conventions reduce confusion, improve collaboration, and allow frontend developers to integrate APIs without needing extra documentation.
