@@ -185,3 +185,49 @@ Backend is responsible for storing and managing tracking-related data
 After completing the environment and Prisma setup, the development server was run using:
 npm run dev
 Everything loaded successfully once dependencies and env variables were correctly configured.
+
+Assignment 2.19
+
+Input Validation Using Zod
+
+Trackey uses Zod to validate all incoming data for POST/PUT API routes.
+This prevents invalid train information from entering the system and makes the backend more reliable.
+
+Schemas
+
+Example: trainSchema.ts
+
+export const trainSchema = z.object({
+  trainNumber: z.string().min(3),
+  trainName: z.string().min(2),
+  status: z.enum(["ON_TIME", "DELAYED", "CANCELLED"]),
+  arrivalTime: z.string(),
+  departureTime: z.string(),
+});
+
+Validation Flow
+
+Incoming request → parsed using trainSchema.parse()
+
+If valid → proceed with logic
+
+If invalid → send structured error response
+
+Error Handling Example
+{
+  "success": false,
+  "message": "Validation Error",
+  "errors": [
+    { "field": "trainNumber", "message": "Train number is required" }
+  ]
+}
+
+Why It Matters
+
+Prevents corrupted or incomplete train data
+
+Ensures consistent input across the team
+
+Reusable schemas work on both client and server
+
+Saves debugging time and catches mistakes early
