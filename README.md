@@ -236,3 +236,196 @@ Screenshots of successful API responses are included as evidence.
 
 Using a consistent and RESTful API route structure makes backend development more predictable and easier to maintain.
 Clear naming conventions reduce confusion, improve collaboration, and allow frontend developers to integrate APIs without needing extra documentation.
+
+🔐 Authentication APIs (Signup / Login)
+
+This project implements secure user authentication using bcrypt for password hashing and JWT (JSON Web Tokens) for session management in a Next.js App Router backend.
+
+Authentication ensures that only valid users can access protected routes and sensitive data.
+
+📌 Features Implemented
+
+User Signup API with secure password hashing
+
+User Login API with JWT token generation
+
+Protected Route that allows access only with a valid token
+
+Secure handling of credentials
+
+Token expiry for session safety
+
+🧠 Authentication vs Authorization
+Concept	Meaning	Example
+Authentication	Verifies who the user is	Login using email & password
+Authorization	Verifies what the user can access	Admin-only routes
+
+👉 This project focuses on authentication.
+
+🛠️ Technologies Used
+
+Next.js (App Router)
+
+Prisma ORM
+
+PostgreSQL
+
+bcrypt
+
+jsonwebtoken (JWT)
+
+📂 API Folder Structure
+app/
+ └── api/
+      ├── auth/
+      │    ├── signup/
+      │    │    └── route.ts
+      │    └── login/
+      │         └── route.ts
+      └── users/
+           └── route.ts
+lib/
+ └── prisma.ts
+
+🔑 Signup API
+Endpoint
+POST /api/auth/signup
+
+What it does
+
+Accepts name, email, and password
+
+Hashes the password using bcrypt
+
+Stores the user securely in the database
+
+Password Hashing Code
+const hashedPassword = await bcrypt.hash(password, 10);
+
+Sample Request
+curl -X POST http://localhost:3000/api/auth/signup \
+-H "Content-Type: application/json" \
+-d '{"name":"Alice","email":"alice@example.com","password":"mypassword"}'
+
+Sample Success Response
+{
+  "success": true,
+  "message": "Signup successful"
+}
+
+Sample Failure Response
+{
+  "success": false,
+  "message": "User already exists"
+}
+
+🔓 Login API
+Endpoint
+POST /api/auth/login
+
+What it does
+
+Verifies email & password
+
+Compares hashed password using bcrypt
+
+Generates a JWT token on success
+
+JWT Generation Code
+const token = jwt.sign(
+  { id: user.id, email: user.email },
+  JWT_SECRET,
+  { expiresIn: "1h" }
+);
+
+Sample Request
+curl -X POST http://localhost:3000/api/auth/login \
+-H "Content-Type: application/json" \
+-d '{"email":"alice@example.com","password":"mypassword"}'
+
+Sample Success Response
+{
+  "success": true,
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+Sample Failure Response
+{
+  "success": false,
+  "message": "Invalid credentials"
+}
+
+🛡️ Protected Route
+Endpoint
+GET /api/users
+
+What it does
+
+Checks Authorization header
+
+Verifies JWT token
+
+Returns protected data only if token is valid
+
+Header Format
+Authorization: Bearer <JWT_TOKEN>
+
+Sample Request
+curl -X GET http://localhost:3000/api/users \
+-H "Authorization: Bearer <YOUR_JWT_TOKEN>"
+
+Success Response
+{
+  "success": true,
+  "message": "Protected data",
+  "user": {
+    "id": "123",
+    "email": "alice@example.com"
+  }
+}
+
+Failure Response
+{
+  "success": false,
+  "message": "Invalid or expired token"
+}
+
+⏳ Token Expiry & Refresh Reflection
+
+Tokens expire after 1 hour
+
+Expiry prevents misuse if a token is leaked
+
+On expiry, user must log in again
+
+For long-lived sessions:
+
+Refresh tokens can be implemented
+
+Tokens can be rotated securely
+
+🍪 Token Storage Options
+Storage	Pros	Cons
+localStorage	Easy to use	Vulnerable to XSS
+HTTP-only cookies	More secure	Slightly complex
+
+👉 Best practice: HTTP-only cookies for production apps.
+
+🔐 How Authentication Improves Security
+
+Passwords are never stored as plain text
+
+JWT ensures identity verification on every request
+
+Unauthorized users cannot access protected routes
+
+Token expiry reduces attack impact
+
+💭 Creative Reflection
+
+If a token leaks or expires, the system protects users by limiting token lifetime and requiring re-authentication. This ensures attackers cannot maintain long-term access, keeping user data safe.
+
+✅ Conclusion
+
+This project demonstrates a secure, scalable authentication system using modern best practices. Implementing authentication early ensures better security, maintainability, and user trust.
