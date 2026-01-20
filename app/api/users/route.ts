@@ -1,17 +1,16 @@
 import { NextResponse } from "next/server";
 import { handleError } from "../../lib/errorhandler";
+import { sendSuccess, sendError } from "../../lib/responsehandler";
 
 export async function GET() {
   try {
-    return NextResponse.json(
-      [
-        { id: 1, name: "Yashika" },
-        { id: 2, name: "Alex" },
-      ],
-      { status: 200 }
-    );
+    const users = [
+      { id: 1, name: "Yashika" },
+      { id: 2, name: "Alex" },
+    ];
+    return sendSuccess(users, "Users fetched successfully");
   } catch (error) {
-    return handleError(error, "GET /api/users");
+    return sendError("Failed to fetch users", "USER_FETCH_ERROR", 500, error);
   }
 }
 
@@ -19,13 +18,10 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    return NextResponse.json(
-      {
-        message: "User created successfully",
-        data: body,
-      },
-      { status: 201 }
-    );
+    if (!body.name) {
+      return sendError("Missing required field: name", "VALIDATION_ERROR", 400);
+    }
+    return sendSuccess(body, "User created successfully", 201);
   } catch (error) {
     return handleError(error, "POST /api/users");
   }
