@@ -21,3 +21,10 @@ export async function POST(req: Request) {
     { status: 201 }
   );
 }
+
+export async function GETUSER() {
+  return NextResponse.json({
+    success: true,
+    message: "User route accessible to authenticated users.",
+  });
+}

@@ -231,3 +231,56 @@ Ensures consistent input across the team
 Reusable schemas work on both client and server
 
 Saves debugging time and catches mistakes early
+
+
+Assignment 2.20
+Authorization Middleware – Trackey
+Overview
+
+Trackey uses JWT-based authorization middleware in Next.js to enforce Role-Based Access Control (RBAC). Middleware runs before API routes, validating user sessions and restricting access based on roles.
+
+How It Works
+
+Request hits /api/*
+
+Middleware intercepts the request
+
+JWT is extracted from Authorization header
+
+Token is verified
+
+User role is checked
+
+Request is allowed or denied
+
+Role-Based Access Rules
+Route	Access
+/api/users	Any authenticated user
+/api/admin	Admin only
+JWT & Roles
+
+User role (user / admin) is stored in the database
+
+Role is embedded inside JWT at login
+
+Middleware reads decoded.role to enforce access
+
+Least Privilege
+
+Users can only access routes required for their role. Admin privileges are strictly limited to admin routes.
+
+Extensibility
+
+New roles (e.g., editor, moderator) can be added by:
+
+Updating the User model
+
+Extending role checks in middleware
+
+Testing Results
+
+Admin token → Admin route → ✅ Allowed
+
+User token → Admin route → ❌ Denied
+
+User token → User route → ✅ Allowed
