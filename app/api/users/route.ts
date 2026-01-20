@@ -1,30 +1,43 @@
 import { NextResponse } from "next/server";
+import { handleError } from "../../lib/errorhandler";
 
 export async function GET() {
-  return NextResponse.json(
-    [
-      { id: 1, name: "Yashika" },
-      { id: 2, name: "Alex" },
-    ],
-    { status: 200 }
-  );
+  try {
+    return NextResponse.json(
+      [
+        { id: 1, name: "Yashika" },
+        { id: 2, name: "Alex" },
+      ],
+      { status: 200 }
+    );
+  } catch (error) {
+    return handleError(error, "GET /api/users");
+  }
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
 
-  return NextResponse.json(
-    {
-      message: "User created successfully",
-      data: body,
-    },
-    { status: 201 }
-  );
+    return NextResponse.json(
+      {
+        message: "User created successfully",
+        data: body,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    return handleError(error, "POST /api/users");
+  }
 }
 
 export async function GETUSER() {
-  return NextResponse.json({
-    success: true,
-    message: "User route accessible to authenticated users.",
-  });
+  try {
+    return NextResponse.json({
+      success: true,
+      message: "User route accessible to authenticated users.",
+    });
+  } catch (error) {
+    return handleError(error, "GETUSER /api/users");
+  }
 }
