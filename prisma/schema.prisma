@@ -13,6 +13,8 @@ model User {
   email     String    @unique
   createdAt DateTime  @default(now())
   projects  Project[]
+  role String @default("user")
+
 }
 
 model Project {
@@ -20,4 +22,16 @@ model Project {
   name   String
   userId Int
   user   User   @relation(fields: [userId], references: [id])
+}
+
+
+model TrainStatus {
+  id        Int      @id @default(autoincrement())
+  trainNo   Int
+  status    String
+  timestamp DateTime @default(now())
+
+  @@index([trainNo])
+  @@index([status])
+  @@index([timestamp])
 }
