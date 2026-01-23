@@ -510,3 +510,115 @@ Accessibility: Standardized structure helps with keyboard navigation and readabi
 ✔ Reusable UI elements (Button, Card, etc.)
 ✔ Consistent page layout across all pages
 ✔ Documentation describing component architecture and benefits
+
+📌 Overview
+
+This assignment demonstrates how to build a reusable and accessible form using React Hook Form for form state management and Zod for schema-based validation. The goal is to ensure clean, predictable, and validated user input while keeping the UI simple and maintainable.
+
+⚙️ Technologies Used
+
+Next.js (App Router)
+
+React Hook Form
+
+Zod
+
+@hookform/resolvers
+
+Tailwind CSS
+
+📂 Project Structure (Relevant Files)
+app/
+ └── signup/
+     └── page.tsx        # Signup form page
+components/
+ └── FormInput.tsx       # Reusable input component
+lib/
+ └── signupSchema.ts     # Zod validation schema
+
+🧠 Form Handling with React Hook Form
+
+React Hook Form is used to manage form state efficiently with minimal re-renders.
+It handles:
+
+Input registration
+
+Form submission
+
+Error tracking
+
+Submission state (isSubmitting)
+
+This makes form logic clean and easy to scale.
+
+✅ Validation using Zod
+
+Zod is used to define a validation schema for the form fields.
+
+Validation Rules:
+
+Name: Minimum 3 characters
+
+Email: Must be a valid email format
+
+Password: Minimum 6 characters
+
+The schema is connected to React Hook Form using zodResolver, ensuring all validation rules are enforced before submission.
+
+🔁 Reusable Components
+
+A reusable FormInput component was created to avoid repetition.
+
+Benefits:
+
+Reduces duplicated input and error logic
+
+Makes the form easier to maintain
+
+Allows reuse across multiple forms
+
+Each input receives its label, type, register function, and error message as props.
+
+♿ Accessibility Considerations
+
+Every input is associated with a <label>
+
+Validation error messages are shown clearly below inputs
+
+aria-invalid is used to indicate invalid fields to screen readers
+
+Keyboard-friendly and readable UI
+
+🧪 Form Behavior
+
+Prevents submission if inputs are invalid
+
+Displays validation errors instantly
+
+On successful submission:
+
+Shows an alert message
+
+Logs validated form data in the console
+
+📸 Screenshots Included
+
+Empty form submission showing validation errors
+
+Invalid input values with error messages
+
+Successful form submission state
+
+✨ Conclusion
+
+Using React Hook Form with Zod provides a powerful and scalable way to handle forms.
+This approach improves:
+
+Data integrity
+
+Code reusability
+
+Accessibility
+
+Developer experience
+
