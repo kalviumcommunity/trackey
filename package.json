@@ -19,6 +19,7 @@
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.2",
     "bcrypt": "^6.0.0",
     "ioredis": "^5.9.2",
