@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server";
+import { hasPermission } from "../../lib/hasPermission"; // Adjusted path based on the directory structure
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
+export async function DELETE(req: Request) {
+  // 🔹 Normally from auth middleware
+  const userRole = "editor";
 
-  const page = Number(searchParams.get("page")) || 1;
-  const limit = Number(searchParams.get("limit")) || 5;
+  const allowed = hasPermission(userRole, "delete");
 
-  return NextResponse.json(
-    {
-      page,
-      limit,
-      data: [],
-    },
-    { status: 200 }
+  console.log(
+    `[RBAC] ${userRole} tried DELETE /trains → ${
+      allowed ? "ALLOWED" : "DENIED"
+    }`
   );
+
+  if (!allowed) {
+    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  }
+
+  // delete train using prisma
+  return NextResponse.json({ message: "Train deleted" });
 }

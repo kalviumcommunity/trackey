@@ -622,3 +622,83 @@ Accessibility
 
 Developer experience
 
+# Trackey – Role-Based Access Control (RBAC)
+
+## Overview
+This project implements **Role-Based Access Control (RBAC)** to ensure users can only access features and perform actions that match their assigned role.  
+RBAC improves security, prevents privilege misuse, and makes the system easier to scale and audit.
+
+---
+
+## Roles & Permissions
+
+| Role   | Permissions                         |
+|--------|-------------------------------------|
+| Admin  | Create, Read, Update, Delete         |
+| Editor | Read, Update                         |
+| Viewer | Read only                            |
+
+Roles are designed to be broad and clearly separated to avoid unnecessary complexity.
+
+---
+
+## RBAC Design
+
+### Permission Mapping
+Roles and permissions are defined in a centralized configuration file.  
+Each role maps to a list of allowed actions such as `create`, `read`, `update`, and `delete`.
+
+### Permission Check Logic
+A reusable helper function checks whether a given role is allowed to perform a specific action before proceeding.
+
+---
+
+## Backend Enforcement (API Routes)
+RBAC is enforced at the **API level** to ensure security even if the frontend is bypassed.
+
+- Every sensitive API route checks the user’s role before executing an action
+- Unauthorized requests return **HTTP 403 (Forbidden)**
+- Example protected resources:
+  - `/api/bookings`
+  - `/api/trains`
+  - `/api/users`
+
+This guarantees that permission rules cannot be bypassed from the client side.
+
+---
+
+## Frontend Access Control (UI)
+The UI conditionally renders buttons and actions based on the user’s role.
+
+- Unauthorized actions are hidden from the interface
+- Users only see what they are permitted to do
+- Improves user experience and reduces accidental misuse
+
+---
+
+## Auditing & Logging
+All permission checks generate logs indicating whether access was **ALLOWED** or **DENIED**.
+
+These logs help with:
+- Security auditing
+- Debugging permission issues
+- Demonstrating policy enforcement during review or evaluation
+
+---
+
+## Scalability & Future Improvements
+This RBAC design is scalable and can be extended by:
+- Adding new roles or permissions
+- Moving permissions to a database
+- Introducing policy-based access control (PBAC)
+- Integrating middleware-based RBAC enforcement
+
+---
+
+## Summary
+- RBAC ensures secure and controlled access
+- Backend APIs enforce permissions strictly
+- Frontend reflects role-based visibility
+- Logging provides transparency and auditability
+
+This implementation forms a strong foundation for secure, role-aware applications.
