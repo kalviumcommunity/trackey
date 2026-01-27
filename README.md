@@ -50,577 +50,242 @@ This command created:
 
 The database connection is configured using the `DATABASE_URL` provided by Prisma in the `.env` file.
 
-```env
-DATABASE_URL="prisma+postgres://localhost:51213/?api_key=..."
-```
+----
+# TRackey
 
-This uses **Prisma Postgres**, which allows easy local development without manual database setup.
+TRackey is a commuter assistance platform aimed at improving the daily travel experience of local train passengers.  
+The problem it addresses is the lack of structured, accessible, and real-time information for commuters, which often leads to confusion, delays, and inefficient travel decisions. This project lays the foundation for building a scalable solution to manage and present such information effectively.
 
----
 
-### 3️⃣ Define Database Models
+Represents comments added to tasks by users.
 
-The database schema is defined in `prisma/schema.prisma`.
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+* `id` (Primary Key)
+* `content`
+* `taskId` (Foreign Key → Task)
+* `userId` (Foreign Key → User)
+* `createdAt`
 
-generator client {
-  provider = "prisma-client-js"
-}
+A comment belongs to one task and one user.
+## Folder Structure
 
-model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  createdAt DateTime  @default(now())
-  projects  Project[]
-}
+src/
+├── app/ # Routes and pages using Next.js App Router
+├── components/ # Reusable UI components
+├── lib/ # Utility functions and helper logic
 
-model Project {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
-}
-```
 
-This schema defines:
+### Directory Explanation
 
-* A `User` table
-* A `Project` table
-* A one-to-many relationship between User and Project
+- **app/**  
+  Contains all application routes and pages handled by the Next.js App Router.  
+  This is where page-level logic and server-side rendering (SSR) are implemented.
+
+- **components/**  
+  Holds reusable UI components that can be shared across multiple pages.  
+  This helps avoid duplication and ensures consistent UI throughout the app.
+
+- **lib/**  
+  Includes utility functions, helper methods, and configurations.  
+  Keeping logic here separates concerns and improves maintainability.
 
 ---
 
-### 4️⃣ Generate Prisma Client
+## Setup Instructions
 
-```bash
+Follow these steps to run the project locally:
+
+1. Clone the repository:
+   ```bash
+https://github.com/kalviumcommunity/trackey.git
+
+2. Navigate to the project directory:
+
+cd trackey
+
+3. Install dependencies:
+
+npm install
+
+4. Start the development server:
+
+npm run dev
+
+6. Open the application in your browser:
+
+http://localhost:3000
+
+Reflection
+
+This folder structure is designed to promote clarity, modularity, and scalability.
+By separating routing (app), UI components (components), and utility logic (lib), the codebase becomes easier to understand and extend.
+
+As the application grows in future sprints—with features like real-time updates,
+notifications, and dashboards—this structure will allow the team to scale efficiently without clutter or major refactoring. It also supports better collaboration by clearly defining responsibilities within the codebase.
+
+ <img width="1680" height="1050" alt="Screenshot 2026-01-08 at 12 52 14 PM" src="https://github.com/user-attachments/assets/14703678-59ea-4ea8-a172-a397955aabca" />
+
+
+Docker Assignment 2.12 
+Dockerfile
+
+Uses node:18-alpine.
+
+Installs dependencies, copies code, exposes 5000, runs npm start.
+
+Docker Compose
+
+backend → built from Dockerfile, uses .env, runs on port 5000.
+
+mongo → mongo:latest, port 27017, persistent volume.
+
+Network & Volumes
+
+Custom trackey-net network for backend ↔ mongo.
+
+mongo-data volume to persist DB.
+
+Env Variables
+
+Loaded from .env using env_file:.
+
+Issues & Fixes
+
+Docker daemon off → start Docker Desktop.
+
+DNS pull error → restart Docker.
+
+Mongo connection error → use mongodb://mongo:27017/db.
+
+Port conflict → stop local Node app.
+
+
+Assignment 2.16
+
+1. Ran Prisma Commands
+
+After setting the .env, executed:
+
 npx prisma generate
-```
+npx prisma migrate dev
 
-This generates the Prisma Client, which is used to perform database queries inside the application.
 
----
+This applied the schema and ensured the database was synced.
 
-### 5️⃣ Prisma Client Initialisation
+Then opened the Prisma UI:
 
-A reusable Prisma client is created in `src/lib/prisma.ts`.
-
-```ts
-import { PrismaClient } from '@prisma/client';
-
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
-  });
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
-```
-
-This ensures only **one Prisma Client instance** is used during development, preventing multiple database connections.
-
----
-
-### 6️⃣ Apply Migration and Verify Connection
-
-```bash
-npx prisma migrate dev --name init
-```
-
-To visually verify the database and tables:
-
-```bash
 npx prisma studio
-```
 
-Tables were successfully created and accessed without errors.
+2. Verified Folder Structure & Purpose
 
----
+Backend is responsible for storing and managing tracking-related data
 
-## ✅ Verification
+3. Server Setup
 
-* Prisma Client generated successfully
-* Database connected without errors
-* Prisma Studio displays the tables
-* Test query `prisma.user.findMany()` executed successfully
+After completing the environment and Prisma setup, the development server was run using:
+npm run dev
+Everything loaded successfully once dependencies and env variables were correctly configured.
 
----
+Assignment 2.19
 
-## 🧠 Reflection
+Input Validation Using Zod
 
-Prisma ORM simplifies database access by providing a clean, type-safe API. It reduces boilerplate SQL, prevents common runtime errors, and improves developer productivity. The Prisma Client ensures reliable and maintainable database interactions, making the project scalable and production-ready.
+Trackey uses Zod to validate all incoming data for POST/PUT API routes.
+This prevents invalid train information from entering the system and makes the backend more reliable.
 
----
+Schemas
 
-## 🏁 Conclusion
+Example: trainSchema.ts
 
-Prisma ORM was successfully installed, configured, and connected to the database. The Prisma Client was generated and initialised correctly, and the database connection was verified using migrations and Prisma Studio.
+export const trainSchema = z.object({
+  trainNumber: z.string().min(3),
+  trainName: z.string().min(2),
+  status: z.enum(["ON_TIME", "DELAYED", "CANCELLED"]),
+  arrivalTime: z.string(),
+  departureTime: z.string(),
+});
 
----
+Validation Flow
 
-API Route Structure and Naming
+Incoming request → parsed using trainSchema.parse()
 
-This project follows RESTful API design principles using Next.js App Router file-based routing.
-All backend API endpoints are organized under the /api directory to ensure clarity, predictability, and maintainability.
+If valid → proceed with logic
 
-📁 API Folder Structure
-app/
- └── api/
-     ├── users/
-     │   └── route.ts
-     ├── trains/
-     │   └── route.ts
-     └── bookings/
-         └── route.ts
+If invalid → send structured error response
 
-
-Each route.ts file automatically maps to a REST API endpoint in Next.js.
-
-🌐 API Endpoints
-HTTP Method	Endpoint	Description
-GET	/api/users	Fetch all users
-POST	/api/users	Create a new user
-GET	/api/trains	Fetch trains with pagination
-GET	/api/bookings	Fetch all bookings
-🔹 REST Design Principles Followed
-
-Resource-based routing using plural nouns
-
-Lowercase route names
-
-HTTP methods define actions (GET, POST)
-
-No verbs used in URLs
-
-Clear separation between UI routes and API routes
-
-🔹 Pagination Support
-
-The /api/trains endpoint supports pagination using query parameters:
-
-/api/trains?page=1&limit=10
-
-
-This helps handle large datasets efficiently and keeps responses lightweight.
-
-⚠️ Error Handling
-
-Meaningful HTTP status codes and error messages are returned when data is unavailable.
-
-Example:
-
-404 Not Found when no bookings exist
-
-This improves debugging and API usability.
-
-🧪 API Testing
-
-All API endpoints were tested using:
-
-Browser
-
-curl / Postman
-
-Screenshots of successful API responses are included as evidence.
-
-🧠 Reflection
-
-Using a consistent and RESTful API route structure makes backend development more predictable and easier to maintain.
-Clear naming conventions reduce confusion, improve collaboration, and allow frontend developers to integrate APIs without needing extra documentation.
-
-🔐 Authentication APIs (Signup / Login)
-
-This project implements secure user authentication using bcrypt for password hashing and JWT (JSON Web Tokens) for session management in a Next.js App Router backend.
-
-Authentication ensures that only valid users can access protected routes and sensitive data.
-
-📌 Features Implemented
-
-User Signup API with secure password hashing
-
-User Login API with JWT token generation
-
-Protected Route that allows access only with a valid token
-
-Secure handling of credentials
-
-Token expiry for session safety
-
-🧠 Authentication vs Authorization
-Concept	Meaning	Example
-Authentication	Verifies who the user is	Login using email & password
-Authorization	Verifies what the user can access	Admin-only routes
-
-👉 This project focuses on authentication.
-
-🛠️ Technologies Used
-
-Next.js (App Router)
-
-Prisma ORM
-
-PostgreSQL
-
-bcrypt
-
-jsonwebtoken (JWT)
-
-📂 API Folder Structure
-app/
- └── api/
-      ├── auth/
-      │    ├── signup/
-      │    │    └── route.ts
-      │    └── login/
-      │         └── route.ts
-      └── users/
-           └── route.ts
-lib/
- └── prisma.ts
-
-🔑 Signup API
-Endpoint
-POST /api/auth/signup
-
-What it does
-
-Accepts name, email, and password
-
-Hashes the password using bcrypt
-
-Stores the user securely in the database
-
-Password Hashing Code
-const hashedPassword = await bcrypt.hash(password, 10);
-
-Sample Request
-curl -X POST http://localhost:3000/api/auth/signup \
--H "Content-Type: application/json" \
--d '{"name":"Alice","email":"alice@example.com","password":"mypassword"}'
-
-Sample Success Response
-{
-  "success": true,
-  "message": "Signup successful"
-}
-
-Sample Failure Response
+Error Handling Example
 {
   "success": false,
-  "message": "User already exists"
+  "message": "Validation Error",
+  "errors": [
+    { "field": "trainNumber", "message": "Train number is required" }
+  ]
 }
 
-🔓 Login API
-Endpoint
-POST /api/auth/login
+Why It Matters
 
-What it does
+Prevents corrupted or incomplete train data
 
-Verifies email & password
+Ensures consistent input across the team
 
-Compares hashed password using bcrypt
+Reusable schemas work on both client and server
 
-Generates a JWT token on success
+Saves debugging time and catches mistakes early
 
-JWT Generation Code
-const token = jwt.sign(
-  { id: user.id, email: user.email },
-  JWT_SECRET,
-  { expiresIn: "1h" }
-);
 
-Sample Request
-curl -X POST http://localhost:3000/api/auth/login \
--H "Content-Type: application/json" \
--d '{"email":"alice@example.com","password":"mypassword"}'
+Assignment 2.20
+Authorization Middleware – Trackey
+Overview
 
-Sample Success Response
-{
-  "success": true,
-  "message": "Login successful",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
+Trackey uses JWT-based authorization middleware in Next.js to enforce Role-Based Access Control (RBAC). Middleware runs before API routes, validating user sessions and restricting access based on roles.
 
-Sample Failure Response
-{
-  "success": false,
-  "message": "Invalid credentials"
-}
+How It Works
 
-🛡️ Protected Route
-Endpoint
-GET /api/users
+Request hits /api/*
 
-What it does
+Middleware intercepts the request
 
-Checks Authorization header
+JWT is extracted from Authorization header
 
-Verifies JWT token
+Token is verified
 
-Returns protected data only if token is valid
+User role is checked
 
-Header Format
-Authorization: Bearer <JWT_TOKEN>
+Request is allowed or denied
 
-Sample Request
-curl -X GET http://localhost:3000/api/users \
--H "Authorization: Bearer <YOUR_JWT_TOKEN>"
+Role-Based Access Rules
+Route	Access
+/api/users	Any authenticated user
+/api/admin	Admin only
+JWT & Roles
 
-Success Response
-{
-  "success": true,
-  "message": "Protected data",
-  "user": {
-    "id": "123",
-    "email": "alice@example.com"
-  }
-}
+User role (user / admin) is stored in the database
 
-Failure Response
-{
-  "success": false,
-  "message": "Invalid or expired token"
-}
+Role is embedded inside JWT at login
 
-⏳ Token Expiry & Refresh Reflection
+Middleware reads decoded.role to enforce access
 
-Tokens expire after 1 hour
+Least Privilege
 
-Expiry prevents misuse if a token is leaked
+Users can only access routes required for their role. Admin privileges are strictly limited to admin routes.
 
-On expiry, user must log in again
+Extensibility
 
-For long-lived sessions:
+New roles (e.g., editor, moderator) can be added by:
 
-Refresh tokens can be implemented
+Updating the User model
 
-Tokens can be rotated securely
+Extending role checks in middleware
 
-🍪 Token Storage Options
-Storage	Pros	Cons
-localStorage	Easy to use	Vulnerable to XSS
-HTTP-only cookies	More secure	Slightly complex
+Testing Results
 
-👉 Best practice: HTTP-only cookies for production apps.
+Admin token → Admin route → ✅ Allowed
 
-🔐 How Authentication Improves Security
+User token → Admin route → ❌ Denied
 
-Passwords are never stored as plain text
+User token → User route → ✅ Allowed
 
-JWT ensures identity verification on every request
 
-Unauthorized users cannot access protected routes
-
-Token expiry reduces attack impact
-
-💭 Creative Reflection
-
-If a token leaks or expires, the system protects users by limiting token lifetime and requiring re-authentication. This ensures attackers cannot maintain long-term access, keeping user data safe.
-
-✅ Conclusion
-
-This project demonstrates a secure, scalable authentication system using modern best practices. Implementing authentication early ensures better security, maintainability, and user trust.
-
-Layout & Component Architecture (Next.js)
-🚀 Project Overview
-
-This project focuses on creating a reusable component architecture in a Next.js application.
-The goal is to build a structured layout using shared components like Header, Sidebar, LayoutWrapper, and reusable UI elements such as a Button.
-This approach helps to maintain consistent design, improve scalability, and make the application easier to manage.
-
-📁 Project Structure (Descriptive)
-
-The project is organized into separate folders for app pages, components, and styles.
-
-app/ contains the main pages and global layout.
-
-components/ holds reusable UI components divided into layout components (Header, Sidebar, LayoutWrapper) and UI elements (Button, Card, Input).
-
-styles/ contains global CSS styling.
-
-This structure keeps the code modular and easy to maintain.
-
-🧩 Component Architecture
-1. Header Component
-
-The Header component is used as the top navigation bar across all pages.
-It provides links to major pages like Home, Dashboard, and Profile.
-The header ensures consistent navigation and branding throughout the application.
-
-2. Sidebar Component
-
-The Sidebar component provides side navigation for dashboard-related pages.
-It includes links like Overview, Users, and Settings.
-Using a sidebar ensures the layout remains consistent and navigation is easy to access.
-
-3. LayoutWrapper Component
-
-The LayoutWrapper combines the Header and Sidebar into a single layout structure.
-It acts as the main template for all pages, ensuring the UI remains uniform.
-Every page that uses this wrapper automatically inherits the same layout design.
-
-4. Reusable UI Elements (Example: Button)
-
-Reusable UI components like Button, Card, and InputField are created to maintain consistent design.
-These components accept properties (props) so they can be customized easily while keeping the same style.
-
-🧠 Component Hierarchy (Descriptive)
-
-The layout follows a hierarchical structure where the Root Layout wraps the entire app.
-Inside it, the LayoutWrapper holds the Header and Sidebar, and the main page content is displayed within the layout.
-
-This hierarchy ensures:
-
-consistent design
-
-easy component reuse
-
-better maintainability
-
-🧪 Visual Testing (Optional)
-
-To ensure components are working correctly, you can use tools like Storybook.
-Storybook helps to preview components in isolation, which makes testing and debugging easier.
-
-📝 Reflection
-✅ Benefits of Modular Architecture
-
-Reusability: Same components can be used across multiple pages.
-
-Maintainability: Changes in one component reflect across the whole app.
-
-Scalability: Easy to add new pages and components without disrupting the layout.
-
-Consistency: Same UI style is maintained across the entire app.
-
-Accessibility: Standardized structure helps with keyboard navigation and readability.
-
-📌 Final Deliverables
-
-✔ Modular layout components (Header, Sidebar, LayoutWrapper)
-✔ Reusable UI elements (Button, Card, etc.)
-✔ Consistent page layout across all pages
-✔ Documentation describing component architecture and benefits
-
-📌 Overview
-
-This assignment demonstrates how to build a reusable and accessible form using React Hook Form for form state management and Zod for schema-based validation. The goal is to ensure clean, predictable, and validated user input while keeping the UI simple and maintainable.
-
-⚙️ Technologies Used
-
-Next.js (App Router)
-
-React Hook Form
-
-Zod
-
-@hookform/resolvers
-
-Tailwind CSS
-
-📂 Project Structure (Relevant Files)
-app/
- └── signup/
-     └── page.tsx        # Signup form page
-components/
- └── FormInput.tsx       # Reusable input component
-lib/
- └── signupSchema.ts     # Zod validation schema
-
-🧠 Form Handling with React Hook Form
-
-React Hook Form is used to manage form state efficiently with minimal re-renders.
-It handles:
-
-Input registration
-
-Form submission
-
-Error tracking
-
-Submission state (isSubmitting)
-
-This makes form logic clean and easy to scale.
-
-✅ Validation using Zod
-
-Zod is used to define a validation schema for the form fields.
-
-Validation Rules:
-
-Name: Minimum 3 characters
-
-Email: Must be a valid email format
-
-Password: Minimum 6 characters
-
-The schema is connected to React Hook Form using zodResolver, ensuring all validation rules are enforced before submission.
-
-🔁 Reusable Components
-
-A reusable FormInput component was created to avoid repetition.
-
-Benefits:
-
-Reduces duplicated input and error logic
-
-Makes the form easier to maintain
-
-Allows reuse across multiple forms
-
-Each input receives its label, type, register function, and error message as props.
-
-♿ Accessibility Considerations
-
-Every input is associated with a <label>
-
-Validation error messages are shown clearly below inputs
-
-aria-invalid is used to indicate invalid fields to screen readers
-
-Keyboard-friendly and readable UI
-
-🧪 Form Behavior
-
-Prevents submission if inputs are invalid
-
-Displays validation errors instantly
-
-On successful submission:
-
-Shows an alert message
-
-Logs validated form data in the console
-
-📸 Screenshots Included
-
-Empty form submission showing validation errors
-
-Invalid input values with error messages
-
-Successful form submission state
-
-✨ Conclusion
-
-Using React Hook Form with Zod provides a powerful and scalable way to handle forms.
-This approach improves:
-
-Data integrity
-
-Code reusability
-
-Accessibility
-
-Developer experience
 
 # Trackey – Role-Based Access Control (RBAC)
 
