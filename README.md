@@ -367,3 +367,28 @@ This RBAC design is scalable and can be extended by:
 - Logging provides transparency and auditability
 
 This implementation forms a strong foundation for secure, role-aware applications.
+
+
+
+Assignment 2.25
+## Email Service Integration
+
+Trackey uses SendGrid for transactional emails such as train delay alerts.
+
+### Setup
+- Verified sender email in SendGrid
+- API key stored securely in environment variables
+
+### Features
+- Automated train delay notifications
+- Reusable HTML email templates
+- Server-side email dispatch via Next.js API routes
+
+### Sandbox vs Production
+- SendGrid allows immediate sending once sender is verified
+- Rate limits handled by SendGrid internally
+
+### Proof
+- Console logs confirm successful email delivery
+- API responds with success status on send
+
