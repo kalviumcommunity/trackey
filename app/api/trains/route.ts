@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasPermission } from "../../lib/hasPermission"; // Adjusted path based on the directory structure
 
 import { trainSchema } from "@/lib/schemas/trainSchema";
 import { ZodError } from "zod";

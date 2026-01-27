@@ -1,17 +1,29 @@
-export const dynamic = "force-dynamic";
+// app/dashboard/page.js
+import { hasPermission } from "../lib/hasPermission";
 
-export default async function Dashboard() {
-  console.log("DASHBOARD PAGE: REQUEST TIME");
-
-  const res = await fetch("https://jsonplaceholder.typicode.com/todos/1", {
-    cache: "no-store",
-  });
-  const data = await res.json();
+export default function DashboardPage() {
+  // In real app, get this from auth/session
+  const userRole = "editor"; // admin | editor | viewer
 
   return (
-    <main style={{ padding: 40 }}>
-      <h1>Dashboard (SSR)</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+    <main style={{ padding: 24 }}>
+      <h1>Dashboard</h1>
+
+      <section style={{ marginTop: 16 }}>
+        {hasPermission(userRole, "read") && <button>View Trains</button>}
+
+        {hasPermission(userRole, "update") && (
+          <button style={{ marginLeft: 8 }}>Edit Train</button>
+        )}
+
+        {hasPermission(userRole, "delete") && (
+          <button style={{ marginLeft: 8 }}>Delete Train</button>
+        )}
+      </section>
+
+      {!hasPermission(userRole, "read") && (
+        <p style={{ color: "red", marginTop: 16 }}>Access denied</p>
+      )}
     </main>
   );
 }
