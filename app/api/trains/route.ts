@@ -1,22 +1,36 @@
 import { NextResponse } from "next/server";
 import { hasPermission } from "../../lib/hasPermission"; // Adjusted path based on the directory structure
 
-export async function DELETE(req: Request) {
-  // 🔹 Normally from auth middleware
-  const userRole = "editor";
+import { trainSchema } from "@/lib/schemas/trainSchema";
+import { ZodError } from "zod";
 
-  const allowed = hasPermission(userRole, "delete");
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const data = trainSchema.parse(body);
 
-  console.log(
-    `[RBAC] ${userRole} tried DELETE /trains → ${
-      allowed ? "ALLOWED" : "DENIED"
-    }`
-  );
+    return NextResponse.json(
+      { success: true, data, message: "Train added successfully" },
+      { status: 201 }
+    );
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Validation Error",
+          errors: error.errors.map((e) => ({
+            field: e.path[0],
+            message: e.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
 
-  if (!allowed) {
-    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    return NextResponse.json(
+      { success: false, message: "Internal Error" },
+      { status: 500 }
+    );
   }
-
-  // delete train using prisma
-  return NextResponse.json({ message: "Train deleted" });
 }
