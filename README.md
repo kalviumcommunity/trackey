@@ -392,3 +392,29 @@ Trackey uses SendGrid for transactional emails such as train delay alerts.
 - Console logs confirm successful email delivery
 - API responds with success status on send
 
+
+Assignment 2.28
+## State Management with Context & Hooks
+
+### Why Context?
+Trackey uses React Context to manage global UI state (sidebar visibility)
+without prop drilling. This allows the sidebar, header, and pages to stay
+in sync across route changes.
+
+### UIContext
+- Stores `sidebarOpen` state
+- Exposes `toggleSidebar()` action
+- Wrapped at the root layout to persist state globally
+
+### Custom Hook
+`useUIContext()` provides a clean API for consuming UI state inside components.
+
+### State Flow
+User Action → toggleSidebar() → UIContext → Sidebar/Header re-render
+
+### Benefits
+- No prop drilling
+- Centralized UI logic
+- Scales to theme, auth, modals
+
+
