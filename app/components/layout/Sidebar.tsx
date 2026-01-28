@@ -1,6 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { useUIContext } from "@/context/UIContext";
+
 // sidebar routes
 export default function Sidebar() {
+  const { sidebarOpen } = useUIContext();
+
+  if (!sidebarOpen) return null;
+
   return (
     <aside className="w-64 bg-gray-100 p-4 text-black min-h-screen">
       <h2 className="font-bold mb-4">Menu</h2>
