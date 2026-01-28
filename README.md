@@ -702,3 +702,122 @@ This RBAC design is scalable and can be extended by:
 - Logging provides transparency and auditability
 
 This implementation forms a strong foundation for secure, role-aware applications.
+
+
+# Error & Loading States (Next.js App Router)
+
+## 📌 Overview
+
+This assignment focuses on improving user experience in a Next.js application by properly handling **asynchronous states** such as **loading** and **error**. Instead of showing blank screens or crashing the app when data is slow or fails to load, we use Next.js App Router features to display friendly fallback UIs.
+
+The goal is to ensure that users always understand what is happening in the app, even when things go wrong.
+
+---
+
+## ❓ Why Handling Loading & Error States Is Important
+
+When an application fetches data from an API:
+
+* There can be **network delays**
+* The API might **fail or return errors**
+
+If these situations are not handled properly:
+
+* Users may see a blank page
+* The app may crash suddenly
+* Users may lose trust in the application
+
+By adding **loading skeletons** and **error boundaries**, we:
+
+* Communicate progress clearly
+* Handle failures gracefully
+* Allow users to retry actions without refreshing the page
+
+---
+
+## 🛠️ Technologies Used
+
+* **Next.js (App Router)**
+* **React**
+* **Tailwind CSS**
+* **JavaScript**
+
+---
+
+## 📂 Folder Structure Used
+
+```
+app/
+ └─ users/
+     ├─ page.js      // Main page that fetches data
+     ├─ loading.js   // Loading skeleton UI
+     ├─ error.js     // Error boundary UI with retry
+```
+
+---
+
+## ⏳ Loading State Implementation
+
+### What was done
+
+* A `loading.js` file was created inside the route folder.
+* This file automatically renders when the page is waiting for data.
+* Skeleton UI was created using Tailwind CSS and `animate-pulse`.
+
+### How loading was tested
+
+* An artificial delay of 2 seconds was added using `setTimeout`.
+* Fetch caching was disabled to ensure the loader is visible.
+
+### Result
+
+* Users see a skeleton layout while data is loading.
+* No blank screen is shown during the delay.
+
+---
+
+## ❌ Error State Implementation
+
+### What was done
+
+* An `error.js` file was added in the same route folder.
+* The component uses `'use client'` and receives `error` and `reset` props.
+* A friendly error message and a **Try Again** button are shown.
+
+### How error was tested
+
+* Errors were intentionally thrown during data fetching.
+* Incorrect API URLs were also used temporarily.
+
+### Retry behavior
+
+* Clicking **Try Again** calls the `reset()` function.
+* The route re-renders and attempts to fetch data again.
+
+---
+
+## 🔁 Testing & Verification
+
+The following states were tested and verified:
+
+1. **Loading State**
+
+   * Skeleton UI visible during delay
+
+2. **Error State**
+
+   * Custom error UI displayed instead of app crash
+
+3. **Retry State**
+
+   * Data successfully loads after clicking retry
+
+Screenshots and recordings were captured for all states as evidence.
+
+---
+
+## ✅ Conclusion
+
+By using Next.js App Router features like `loading.js` and `error.js`, the application gracefully handles asynchronous operations. This ensures a smooth and user-friendly experience even when data is slow or errors occur.
+
+This assignment demonstrates a complete understanding of fallback UIs, error boundaries, and resilient UI d
