@@ -369,8 +369,6 @@ This RBAC design is scalable and can be extended by:
 This implementation forms a strong foundation for secure, role-aware applications.
 
 
-
-Assignment 2.25
 ## Email Service Integration
 
 Trackey uses SendGrid for transactional emails such as train delay alerts.
