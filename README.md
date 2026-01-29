@@ -391,7 +391,6 @@ Trackey uses SendGrid for transactional emails such as train delay alerts.
 - API responds with success status on send
 
 
-Assignment 2.28
 ## State Management with Context & Hooks
 
 ### Why Context?
