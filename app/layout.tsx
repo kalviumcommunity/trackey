@@ -1,5 +1,6 @@
 import "./globals.css";
-import { LayoutWrapper } from "@/components";
+import { LayoutWrapper } from "@/app/components";
+import { UIProvider } from "@/context/UIContext";
 
 export const metadata = {
   title: "Trackey",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LayoutWrapper>{children}</LayoutWrapper>
+        <UIProvider>
+          <LayoutWrapper>{children}</LayoutWrapper>
+        </UIProvider>
       </body>
     </html>
   );
