@@ -821,3 +821,44 @@ Screenshots and recordings were captured for all states as evidence.
 By using Next.js App Router features like `loading.js` and `error.js`, the application gracefully handles asynchronous operations. This ensures a smooth and user-friendly experience even when data is slow or errors occur.
 
 This assignment demonstrates a complete understanding of fallback UIs, error boundaries, and resilient UI d
+
+
+## HTTPS Enforcement & Secure Headers
+
+This project implements modern browser security headers to protect against common web attacks and enforce secure communication.
+
+### HSTS (HTTP Strict Transport Security)
+
+HSTS forces browsers to always use HTTPS, preventing man-in-the-middle attacks and insecure downgrades.
+
+```
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+```
+
+### Content Security Policy (CSP)
+
+CSP restricts trusted sources for scripts and assets, reducing XSS risks.
+
+```
+default-src 'self';
+script-src 'self';
+style-src 'self' 'unsafe-inline';
+img-src 'self' data:;
+```
+
+### CORS Configuration
+
+CORS ensures only authorized domains can access API routes.
+
+```
+Access-Control-Allow-Origin: http://localhost:3000
+```
+
+### Verification
+
+Headers were verified using Chrome DevTools Network tab.
+Screenshots confirm correct response headers.
+
+### Reflection
+
+Adding security headers strengthens application trust and prevents common web vulnerabilities. This setup balances security with development flexibility while preparing the app for production deployment.
