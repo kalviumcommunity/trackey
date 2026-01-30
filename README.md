@@ -415,3 +415,112 @@ User Action → toggleSidebar() → UIContext → Sidebar/Header re-render
 - Scales to theme, auth, modals
 
 
+Assignement 2.34
+
+🔐 Authentication & Session Management (JWT)
+
+Trackey implements secure token-based authentication using Access Tokens and Refresh Tokens following industry best practices.
+
+📌 Token Types
+1. Access Token
+
+Short-lived (15 minutes)
+
+Sent in Authorization: Bearer <token> header
+
+Used to access protected APIs
+
+2. Refresh Token
+
+Long-lived (7 days)
+
+Stored in HTTP-only cookie
+
+Used only to obtain new access tokens
+
+Automatically rotated on every refresh
+
+🧱 Token Structure
+
+Each JWT consists of:
+
+Header → algorithm & token type
+
+Payload → user id, email
+
+Signature → signed using server secret
+
+🔁 Expiry & Refresh Flow
+
+User logs in → receives access token + refresh cookie
+
+Frontend sends access token with requests
+
+If access token expires (401):
+
+Frontend calls /api/auth/refresh
+
+Server verifies refresh token
+
+Issues:
+
+New access token
+
+New refresh token (rotation)
+
+Original request is retried automatically
+
+Console proof:
+
+🔄 Refresh token rotated
+
+🔒 Secure Storage Strategy
+Token	Storage	Reason
+Access Token	In memory	Prevents XSS
+Refresh Token	HTTP-only cookie	JS cannot access
+
+Cookie configuration:
+
+httpOnly: true
+
+secure: true
+
+sameSite: "strict"
+
+🛡️ Security Considerations
+
+XSS Protection
+
+No tokens stored in localStorage or sessionStorage
+
+Refresh token inaccessible to JavaScript
+
+CSRF Protection
+
+SameSite cookies prevent cross-site requests
+
+Refresh endpoint requires valid cookie
+
+Replay Attack Mitigation
+
+Refresh tokens are rotated on every use
+
+🧪 Demo Evidence
+
+Login API returns access token
+
+Refresh token stored securely in cookies
+
+Access token automatically refreshed on expiry
+
+Console logs confirm token rotation
+
+📌 Reflection
+
+Using access + refresh tokens improves:
+
+Security
+
+User experience (no forced logouts)
+
+Scalability of authentication logic

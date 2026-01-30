@@ -15,16 +15,18 @@
     "prisma:studio": "prisma studio",
     "prisma:seed": "prisma db seed"
   },
-  "prisma": {
-    "seed": "node prisma/seed.js"
-  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.2",
     "@sendgrid/mail": "^8.1.6",
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "ioredis": "^5.9.2",
     "jsonwebtoken": "^9.0.3",
+    "next": "16.1.1",
+    "pg": "^8.17.2",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "next": "^16.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
