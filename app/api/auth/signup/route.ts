@@ -19,16 +19,16 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: { name, email, password: hashedPassword },
     });
 
     return NextResponse.json({
       success: true,
       message: "Signup successful",
-      user,
     });
   } catch (error) {
+    console.error("Error during signup:", error);
     return NextResponse.json(
       { success: false, message: "Signup failed" },
       { status: 500 }
