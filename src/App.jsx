@@ -1,26 +1,64 @@
+"use client";
+import { useAuth } from "../hooks/useAuth";
+import { useUI } from "../hooks/useUI";
+
 export default function App() {
-  const cards = [1, 2, 3, 4, 5, 6];
+  const { user, login, logout, isAuthenticated } = useAuth();
+  const { theme, toggleTheme, sidebarOpen, toggleSidebar } = useUI();
 
   return (
-    <div className="min-h-screen bg-surface-light text-gray-900 transition-colors duration-300">
-      {/* Header */}
-      <header className="p-4 md:p-8 lg:p-12 flex justify-between items-center">
-        <h1 className="text-lg md:text-2xl lg:text-3xl font-semibold text-brand">
-          Responsive Dashboard
-        </h1>
-      </header>
+    <div
+      className={`min-h-screen p-6 ${
+        theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+      }`}
+    >
+      <h1 className="text-2xl font-bold mb-6">
+        State Management using Context & Hooks
+      </h1>
 
-      {/* Content Grid */}
-      <main className="grid gap-4 p-4 md:p-8 lg:p-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {cards.map((card) => (
-          <div key={card} className="p-6 rounded-xl shadow bg-white transition">
-            <h2 className="text-xl font-bold mb-2">Card {card}</h2>
-            <p className="text-sm md:text-base">
-              This layout automatically adjusts based on screen size.
-            </p>
-          </div>
-        ))}
-      </main>
+      {/* AUTH */}
+      <div className="mb-6">
+        <h2 className="font-semibold">Auth State</h2>
+
+        {isAuthenticated ? (
+          <>
+            <p>Logged in as: {user}</p>
+            <button
+              onClick={logout}
+              className="bg-red-500 text-white px-4 py-1 rounded"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => login("KalviumUser")}
+            className="bg-green-500 text-white px-4 py-1 rounded"
+          >
+            Login
+          </button>
+        )}
+      </div>
+
+      {/* UI */}
+      <div>
+        <h2 className="font-semibold">UI Controls</h2>
+        <p>Theme: {theme}</p>
+
+        <button
+          onClick={toggleTheme}
+          className="bg-blue-500 text-white px-4 py-1 rounded mr-3"
+        >
+          Toggle Theme
+        </button>
+
+        <button
+          onClick={toggleSidebar}
+          className="bg-yellow-400 px-4 py-1 rounded"
+        >
+          {sidebarOpen ? "Close Sidebar" : "Open Sidebar"}
+        </button>
+      </div>
     </div>
   );
 }
