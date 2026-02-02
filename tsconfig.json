@@ -4,9 +4,9 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true, 
-    "noImplicitAny": true, 
-    "noUnusedLocals": true, 
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
     "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
@@ -22,6 +22,7 @@
         "name": "next"
       }
     ],
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./*"]
     }

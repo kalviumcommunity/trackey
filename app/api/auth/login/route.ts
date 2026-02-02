@@ -2,7 +2,7 @@ import { sendSuccess, sendError } from "@/lib/responseHandler";
 import { ERROR_CODES } from "@/lib/errorCodes";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../../../lib/prisma";
+import { prisma } from "../../../lib/prisma";
 import { z } from "zod";
 
 const loginSchema = z.object({
