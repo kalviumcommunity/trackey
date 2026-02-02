@@ -1,38 +1,65 @@
-import { NextResponse } from "next/server";
-import redis from "../../lib/redis"; // Adjusted path to the correct relative location
-import { prisma } from "../../lib/prisma"; // Adjust the path based on your project structure
+import { sendSuccess, sendError } from "@/lib/responseHandler";
+import { ERROR_CODES } from "@/lib/errorCodes";
 
 export async function GET() {
   try {
-    const cacheKey = "users:list";
+    const users = [
+      { id: 1, name: "Yashika" },
+      { id: 2, name: "Alex" },
+    ];
+    return sendSuccess(users, "Users fetched successfully");
+  } catch (error) {
+    // Log full error server-side for debugging
+    console.error("Users API error:", {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      timestamp: new Date().toISOString(),
+    });
 
-    // 1️⃣ Check cache
-    const cachedUsers = await redis.get(cacheKey);
+    return sendError("Failed to fetch users", ERROR_CODES.INTERNAL_ERROR, 500);
+  }
+}
 
-    if (cachedUsers) {
-      console.log("🚀 Cache Hit");
-      return NextResponse.json(JSON.parse(cachedUsers));
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+
+    if (!body.name) {
+      return sendError(
+        "Missing required field: name",
+        ERROR_CODES.VALIDATION_ERROR,
+        400
+      );
     }
 
-    console.log("❌ Cache Miss - Fetching from DB");
+    return sendSuccess(body, "User created successfully", 201);
+  } catch (error) {
+    // Log full error server-side for debugging
+    console.error("Users POST error:", {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      timestamp: new Date().toISOString(),
+    });
 
-    // 2️⃣ Fetch from DB
-    const users = await prisma.user.findMany();
+    return sendError("Failed to create user", ERROR_CODES.INTERNAL_ERROR, 500);
+  }
+}
 
-    // 3️⃣ Store in cache (TTL = 60 seconds)
-    await redis.set(cacheKey, JSON.stringify(users), "EX", 60);
+export async function GETUSER() {
+  try {
+    return sendSuccess(null, "User route accessible to authenticated users.");
+  } catch (error) {
+    // Log full error server-side for debugging
+    console.error("GETUSER error:", {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      timestamp: new Date().toISOString(),
+    });
 
-    return NextResponse.json({ success: true, users });
-  } catch (error: unknown) {
-    console.error("API ERROR:", error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to fetch users",
-        error: (error as Error).message,
-      },
-      { status: 500 }
+    return sendError(
+      "Failed to access user route",
+      ERROR_CODES.INTERNAL_ERROR,
+      500
     );
   }
 }
