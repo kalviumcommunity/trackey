@@ -44,5 +44,7 @@ next-env.d.ts
 # Ignore environment files
 .env*
 !.env.example
+.env.local
+
 
 /app/generated/prisma
