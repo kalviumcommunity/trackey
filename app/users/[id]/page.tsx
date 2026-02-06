@@ -1,5 +1,18 @@
 "use client";
 
+interface Props {
+  params: { id: string };
+}
+
+export default function UserProfile({ params }: Props) {
+  return (
+    <main className="p-6">
+      <h1 className="text-xl font-bold">User Profile</h1>
+      <p>User ID: {params.id}</p>
+    </main>
+  );
+}
+
 export default function Home() {
   const stats = [
     { title: "Active Users", value: "1,248" },
